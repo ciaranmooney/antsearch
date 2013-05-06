@@ -43,22 +43,18 @@ class world(object):
 
         self.create_hive(hLocation)
         self.create_food(fLocation)
+        self.totalFood = self.point(fLocation).foodLeft
 
     def create_hive(self, hiveLocation):
-        pass
+        x, y = hiveLocation
+        self.world[x][y] = hive(hiveLocation)
 
     def create_food(self, foodLocation, amount=100):
         x, y = foodLocation
         self.world[x][y] = food(foodLocation, amount)
 
-    def create_ants(self, number=100):
-        pass
-    
     def show_world(self):
         return self.world
-
-    def search_step(self):
-        pass
 
     def point(self, coords):
         x, y = coords
@@ -73,22 +69,32 @@ class point(object):
         self.neighbours = []
         self.pheremones  = 0
     
-    def pheremone_decay(self):
+    def pheremoneDecay(self):
         self.pheremones -= 1
+    
+    def pheremoneAdd(self):
+        self.pheremones += 1
 
     def find_neighbours(self):
         self.neighbours.append(stuff)
 
 class hive(point):
-    pass
+    ''' Hive object, keeps track of how much food is collected. So that we can
+        figure out if we have reached the end of the simulation.
+        
+    '''
+    def __init__(self, location):
+        point.__init__(self, location)
+        self.food = 0
+
+    def addFood(self):
+        self.food += 1
 
 class food(point):
-    '''
+    ''' Food object. Keeps track of how much food is left. 
     '''
     def __init__(self, location, amount=100 ):
         point.__init__(self, location)
-        print "amount =", amount
-        print location
         self.foodLeft = amount
 
     def remove_food(self):
