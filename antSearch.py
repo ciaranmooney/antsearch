@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import random
+from random import choice
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
@@ -9,35 +10,44 @@ class ant(object):
         Ants look randomly, unless they see a pheremone trail. If they see
         multiple trails they follow the strongest.
     '''
-    def __init__(self, location):
-        self.home = hive
+    def __init__(self, hive):
+        self.hive = hive.location
         self.have_food = False
-        self.location = location
+        self.location = self.hive
+        self.objective = "food"
 
     def look(self):
-        pass
+        ''' Check curent area for pheremones, food or hive.
+        '''
+         
+                
 
     def move(self, newLocation):
-        self.location = newLocation
+        self.neighbours = self.hive.findNeighbours(self.location) 
+        
+        if self.lastPoint in self.neighbours:
+            self.neighbours.remove(self.lastPoint)
+        
+        self.location = choice(self.neighbours)
 
-    def found_food(self):
+    def foundFood(self):
         pass
 
-    def return_home(self):
+    def returnHome(self):
         pass
 
 class world(object):
-    ''' World contains the hive, the ants, and the food.
+    ''' World contains the hive, the pheremones, and the food.
     '''
     def __init__(self, size, food='random', hive='random'):
         self.world = [[point]*size]*size
         if hive == 'random':
-            hLocation = (random.randint(0,size), random.randint(0,size))
+            hLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:
             hLocation = hive
 
         if food == 'random':
-            fLocation = (random.randint(0,size), random.randint(0,size))
+            fLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:
             fLocation = food
 
@@ -93,9 +103,11 @@ class hive(point):
 class food(point):
     ''' Food object. Keeps track of how much food is left. 
     '''
-    def __init__(self, location, amount=100 ):
+    def __init__(self, location, amount=100):
         point.__init__(self, location)
         self.foodLeft = amount
 
-    def remove_food(self):
+    def removeFood(self):
         self.foodLeft -= 1
+
+

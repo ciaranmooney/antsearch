@@ -6,16 +6,47 @@ import antSearch
 class TestPoint(unittest.TestCase):
     
     def setUp(self):
-        pass
+        self.loc = (1,1)
+        self.p = antSearch.point(self.loc)
 
     def test_create(self):
-        p = antSearch.point((1,1))
-        self.assertEqual(p.location, (1,1))
-        self.assertEqual(p.pheremones, 0)
-        p.pheremoneAdd()    
-        self.assertEqual(p.pheremones, 1)
-        p.pheremoneDecay()
-        self.assertEqual(p.pheremones, 0)
+        self.assertEqual(self.p.location, self.loc)
+       
+    def test_pheremones(self):   
+        self.assertEqual(self.p.pheremones, 0)
+        self.p.pheremoneAdd()    
+        self.assertEqual(self.p.pheremones, 1)
+        self.p.pheremoneDecay()
+        self.assertEqual(self.p.pheremones, 0)
+
+class TestFood(unittest.TestCase):
+    
+    def setUp(self):
+        self.loc = (10,10)
+        self.f = antSearch.food(self.loc, 100)
+
+    def test_create(self):
+        self.assertEqual(self.f.location, self.loc)
+
+    def test_food(self): 
+        self.assertEqual(self.f.foodLeft, 100)
+        self.f.removeFood()
+        self.assertEqual(self.f.foodLeft, 99)
+
+class TestHive(unittest.TestCase):
+    
+    def setUp(self):
+        self.loc = (10,10)
+        self.h = antSearch.hive(self.loc)
+
+    def test_create(self):
+        self.assertEqual(self.h.location, self.loc)
+
+    def test_hive(self):
+        self.assertEqual(self.h.food, 0)
+        self.h.addFood()
+        self.assertEqual(self.h.food, 1)
+
 
 class TestWorld(unittest.TestCase):
     
