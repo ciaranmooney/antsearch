@@ -70,6 +70,16 @@ class world(object):
         x, y = coords
         return self.world[x][y]
 
+    def findNeighbours(self, coords):
+        x, y = coords
+        n = []
+        for i in xrange(-1,2):
+            for j in xrange(-1,2):
+                n.append((x+i,y+j))
+        n.sort()
+        n.remove(coords)
+        return n 
+
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
         or food, or hive.
