@@ -77,8 +77,17 @@ class world(object):
             for j in xrange(-1,2):
                 n.append((x+i,y+j))
         n.sort()
+
+        n = [point for point in n if self.__checkCoords__(point)]
+
         n.remove(coords)
         return n 
+
+    def __checkCoords__(self, coords):
+        x, y = coords
+        return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
+        
+
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
