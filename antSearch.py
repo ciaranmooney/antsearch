@@ -51,17 +51,24 @@ class world(object):
         else:
             fLocation = food
 
-        self.create_hive(hLocation)
-        self.create_food(fLocation)
-        self.totalFood = self.point(fLocation).foodLeft
+        self.hiveLocation = hLocation
+        self.foodLocation = fLocation
+
+        self.create_hive(self.hiveLocation)
+        self.create_food()
+        self.totalFood = self.point(self.foodLocation).foodLeft
+
+    def hive(self):
+        x, y = self.hiveLocation
+        return self.world[x][y]
 
     def create_hive(self, hiveLocation):
         x, y = hiveLocation
         self.world[x][y] = hive(hiveLocation)
 
-    def create_food(self, foodLocation, amount=100):
-        x, y = foodLocation
-        self.world[x][y] = food(foodLocation, amount)
+    def create_food(self, amount=100):
+        x, y = self.foodLocation
+        self.world[x][y] = food(self.foodLocation, amount)
 
     def show_world(self):
         return self.world
