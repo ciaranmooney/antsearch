@@ -19,10 +19,10 @@ class ant(object):
     def look(self):
         ''' Check curent area for pheremones, food or hive.
         '''
-         
-                
 
     def move(self, newLocation):
+        ''' Move to new location
+        '''
         self.neighbours = self.hive.findNeighbours(self.location) 
         
         if self.lastPoint in self.neighbours:

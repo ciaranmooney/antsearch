@@ -51,7 +51,12 @@ class TestHive(unittest.TestCase):
 class TestWorld(unittest.TestCase):
     
     def setUp(self):
-        pass
+        self.test_find_neighbours_setUp()
+    
+    def test_find_neighbours_setUp(self):
+        hiveLocation = (10,10)
+        foodLocation = (99,2)
+        self.World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
     
     def test_create(self):
         World1 = antSearch.world(100)
@@ -75,103 +80,77 @@ class TestWorld(unittest.TestCase):
         hive.addFood()
         self.assertEqual(hive.food, 1)
 
+    
     def test_find_neighbours(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (11,34)
         n_sol = [(10,35),(11,35),(12,35),(10,34),(12,34),(10,33),(11,33),(12,33)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_top(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (10,0)
         n_sol = [(9,0),(11,0),(9,1),(10,1),(11,1)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
         
     def test_find_neighbours_bottom(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (10,99)
         n_sol = [(9,99),(11,99),(9,98),(10,98),(11,98)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_left(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (0,10)
         n_sol = [(0,9),(0,11),(1,9),(1,10),(1,11)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_right(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (99,10)
         n_sol = [(99,9),(98,9),(98,10),(98,11),(99,11)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_topleft(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (0,0)
         n_sol = [(1,0),(1,1),(0,1)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_topright(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (99,0)
         n_sol = [(98,0),(98,1),(99,1)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_bottomleft(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (0,99)
         n_sol = [(0,98),(1,98),(1,99)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
     def test_find_neighbours_bottomright(self):
-        hiveLocation = (10,10)
-        foodLocation = (99,2)
         centre1 = (99,99)
         n_sol = [(99,98),(98,99),(98,98)]
         n_sol.sort()
 
-        World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
-        n = World3.findNeighbours(centre1)
+        n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
 if __name__ == '__main__':
