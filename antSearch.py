@@ -9,26 +9,75 @@ class ant(object):
 
         Ants look randomly, unless they see a pheremone trail. If they see
         multiple trails they follow the strongest.
+    
     '''
-    def __init__(self, hive):
-        self.hive = hive.location
+    def __init__(self, world):
+        self.world = world
         self.have_food = False
-        self.location = self.hive
+        self.location = self.world.hive().location
+        self.lastPoint = None
         self.objective = "food"
-
-    def look(self):
-        ''' Check curent area for pheremones, food or hive.
+        self.__moves__ = []
+    
+    def turn(self):
         '''
+        An Ants turn behaviour:
+            check objective
+            if food, check to see on food point
+            if objective food the look for pheremones or food
+            move (priority food, pheremones, then empty)
 
-    def move(self, newLocation):
-        ''' Move to new location
+            if objective hive then check to see if on hive 
+            if objective hive then look for hive
+            if not found hive deposit pheremone 
+            look for pheremones
+            move (pheremones first priority, then empty)
         '''
-        self.neighbours = self.hive.findNeighbours(self.location) 
+        self.move()
+
+    def move(self):
+        ''' Choose and move to new location
+        '''
+        self.neighbours = self.world.findNeighbours(self.location) 
         
         if self.lastPoint in self.neighbours:
             self.neighbours.remove(self.lastPoint)
         
+        if self.objective == 'food':
+            for coord in self.neighbours:
+                if self.world.point(coord), food):
+                #if type(self.world.point(coord)) == food:
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+
+                elif isinstance(self.world.point(coord), pheremone):
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+                else:
+                    self.__moves__.append(coord)
+
+        if self.objective == 'hive':
+            for coord in self.neighbours:
+                if type(self.world.point(coord)) == hive:
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+
+                elif type(self.world.point(coord)) == pheremone:
+                    self.__moves__.append(coord)
+                    self.__moves__.append(coord)
+                else:
+                    self.__moves__.append(coord)
+
+        self.lastPoint = self.location
         self.location = choice(self.neighbours)
+       
+    def leavePheremone(self):
+        pass
+    
+    def checkSurroundings(self):
+        pass
 
     def foundFood(self):
         pass

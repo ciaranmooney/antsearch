@@ -174,15 +174,70 @@ class TestAnt(unittest.TestCase):
         foodLocation = (99,2)
         self.world = antSearch.world(100, hive=hiveLocation, food=foodLocation)
 
-    def test_ant_init(self):
-        h = self.world.hive()
-        ant = antSearch.ant(h)
+    def test_init(self):
+        ant = antSearch.ant(self.world)
 
-        self.assertEqual(ant.hive, h.location)
+        self.assertEqual(ant.world, self.world)
         self.assertEqual(ant.have_food, False)
-        self.assertEqual(ant.location, h.location)
+        self.assertEqual(ant.location, self.world.hive().location)
         self.assertEqual(ant.objective, 'food')
 
+    def test_turn(self):
+        ant = antSearch.ant(self.world) 
+        
+        self.assertEqual(ant.location, self.world.hive().location)
+        possible_moves = self.world.findNeighbours(ant.location) 
+
+        ant.turn()
+        self.assertEqual(ant.location in possible_moves, True)
+   
+    def test_turn_pheremone(self):
+        ant = antSearch.ant(self.world) 
+        
+        self.assertEqual(ant.location, self.world.hive().location)
+        possible_moves = self.world.findNeighbours(ant.location) 
+        ant.turn()
+        self.assertEqual(ant.location in possible_moves, True)
+  
+
+        ant.location = (50,50)
+        self.world.point((49,49)).pheremones = 1
+
+        possible_moves.append((49,49))
+        ant.turn()
+        self.assertEqual(ant.__moves__ in possible_moves, True)
+
+    def test_move(self):
+        ant = antSearch.ant(self.world)
+
+        self.assertEqual(ant.location, self.world.hive().location)
+        
+        possible_moves = self.world.findNeighbours(ant.location) 
+       
+        ant.move()
+        
+        self.assertEqual(ant.location in possible_moves, True)
+        self.assertEqual(ant.lastPoint, self.world.hive().location)
+
+        test_point = ant.location
+        possible_moves = self.world.findNeighbours(ant.location) 
+       
+        ant.move()
+        
+        self.assertEqual(ant.location in possible_moves, True)
+        self.assertEqual(ant.lastPoint, test_point)
+
+    def test_move_pheremone(self):
+        pass
+
+    def test_move_food(self):
+        pass
+
+    def test_move_hive(self):
+        pass
+
+    def test_check_surroundings(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
