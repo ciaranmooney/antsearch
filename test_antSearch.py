@@ -87,6 +87,13 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(type(World2.hive()), antSearch.hive)
         self.assertEqual(World2.hive().location, hiveLocation)
 
+    def test_food(self):
+        foodLocation = (52,40)
+        World2 = antSearch.world(100, food=foodLocation)
+        
+        self.assertEqual(type(World2.food()), antSearch.food)
+        self.assertEqual(World2.food().location, foodLocation)
+
     def test_find_neighbours(self):
         centre1 = (11,34)
         n_sol = [(10,35),(11,35),(12,35),(10,34),(12,34),(10,33),(11,33),(12,33)]

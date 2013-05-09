@@ -62,6 +62,10 @@ class world(object):
         x, y = self.hiveLocation
         return self.world[x][y]
 
+    def food(self):
+        x, y = self.foodLocation
+        return self.world[x][y]
+
     def create_hive(self, hiveLocation):
         x, y = hiveLocation
         self.world[x][y] = hive(hiveLocation)
