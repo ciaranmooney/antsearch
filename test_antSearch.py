@@ -6,14 +6,13 @@ import antSearch
 class TestPoint(unittest.TestCase):
     
     def setUp(self):
-        self.loc = (1,1)
-        self.p = antSearch.point(self.loc)
+        self.p = antSearch.point()
 
     def test_create(self):
-        self.assertEqual(self.p.location, self.loc)
+        pass
+        #self.assertEqual(self.p.location, self.loc)
        
     def test_pheremones(self):   
-        self.assertEqual(self.p.pheremones, 0)
         self.p.pheremoneAdd()    
         self.assertEqual(self.p.pheremones, 1)
         self.p.pheremoneDecay()
@@ -23,10 +22,7 @@ class TestFood(unittest.TestCase):
     
     def setUp(self):
         self.loc = (10,10)
-        self.f = antSearch.food(self.loc, 100)
-
-    def test_create(self):
-        self.assertEqual(self.f.location, self.loc)
+        self.f = antSearch.food(100)
 
     def test_food(self): 
         self.assertEqual(self.f.foodLeft, 100)
@@ -36,11 +32,7 @@ class TestFood(unittest.TestCase):
 class TestHive(unittest.TestCase):
     
     def setUp(self):
-        self.loc = (10,10)
-        self.h = antSearch.hive(self.loc)
-
-    def test_create(self):
-        self.assertEqual(self.h.location, self.loc)
+        self.h = antSearch.hive()
 
     def test_hive(self):
         self.assertEqual(self.h.food, 0)
@@ -63,9 +55,15 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(len(World1.world), 100)
         self.assertEqual(len(World1.world[0]), 100)
 
+    def test_create_point(self):
+        coord = (30,20)
+        p = self.World3.point(coord)
+        self.assertEqual(p.pheremones, 0)
+        self.assertEqual(type(p), antSearch.point)
+
     def test_create_food(self):
         newWorld = antSearch.world(100, food=(1,1))
-        self.assertEqual(newWorld.point((12,13)), antSearch.point)
+        self.assertEqual(type(newWorld.point((12,13))), antSearch.point)
         self.assertEqual(type(newWorld.point((1,1))), antSearch.food)
         food = newWorld.point((1,1))
         self.assertEqual(newWorld.point((1,1)).foodLeft, 100)
@@ -85,14 +83,14 @@ class TestWorld(unittest.TestCase):
         World2 = antSearch.world(100, hive=hiveLocation)
         
         self.assertEqual(type(World2.hive()), antSearch.hive)
-        self.assertEqual(World2.hive().location, hiveLocation)
+        self.assertEqual(World2.hiveLocation, hiveLocation)
 
     def test_food(self):
         foodLocation = (52,40)
         World2 = antSearch.world(100, food=foodLocation)
         
         self.assertEqual(type(World2.food()), antSearch.food)
-        self.assertEqual(World2.food().location, foodLocation)
+        self.assertEqual(World2.foodLocation, foodLocation)
 
     def test_find_neighbours(self):
         centre1 = (11,34)
@@ -179,13 +177,13 @@ class TestAnt(unittest.TestCase):
 
         self.assertEqual(ant.world, self.world)
         self.assertEqual(ant.have_food, False)
-        self.assertEqual(ant.location, self.world.hive().location)
+        self.assertEqual(ant.location, self.world.hiveLocation)
         self.assertEqual(ant.objective, 'food')
 
     def test_turn(self):
         ant = antSearch.ant(self.world) 
         
-        self.assertEqual(ant.location, self.world.hive().location)
+        self.assertEqual(ant.location, self.world.hiveLocation)
         possible_moves = self.world.findNeighbours(ant.location) 
 
         ant.turn()
@@ -193,31 +191,29 @@ class TestAnt(unittest.TestCase):
    
     def test_turn_pheremone(self):
         ant = antSearch.ant(self.world) 
-        
-        self.assertEqual(ant.location, self.world.hive().location)
-        possible_moves = self.world.findNeighbours(ant.location) 
-        ant.turn()
-        self.assertEqual(ant.location in possible_moves, True)
-  
-
         ant.location = (50,50)
+        
         self.world.point((49,49)).pheremones = 1
+        print "Pheremone test", self.world.point((49,49)).pheremones
 
+        possible_moves = self.world.findNeighbours(ant.location) 
         possible_moves.append((49,49))
+        possible_moves.sort()
         ant.turn()
-        self.assertEqual(ant.__moves__ in possible_moves, True)
+        print "test", possible_moves
+        self.assertEqual(ant.__moves__, possible_moves)
 
     def test_move(self):
         ant = antSearch.ant(self.world)
 
-        self.assertEqual(ant.location, self.world.hive().location)
+        self.assertEqual(ant.location, self.world.hiveLocation)
         
         possible_moves = self.world.findNeighbours(ant.location) 
        
         ant.move()
         
         self.assertEqual(ant.location in possible_moves, True)
-        self.assertEqual(ant.lastPoint, self.world.hive().location)
+        self.assertEqual(ant.lastPoint, self.world.hiveLocation)
 
         test_point = ant.location
         possible_moves = self.world.findNeighbours(ant.location) 

@@ -14,7 +14,7 @@ class ant(object):
     def __init__(self, world):
         self.world = world
         self.have_food = False
-        self.location = self.world.hive().location
+        self.location = self.world.hiveLocation
         self.lastPoint = None
         self.objective = "food"
         self.__moves__ = []
@@ -45,17 +45,20 @@ class ant(object):
         
         if self.objective == 'food':
             for coord in self.neighbours:
-                if self.world.point(coord), food):
-                #if type(self.world.point(coord)) == food:
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
-
-                elif isinstance(self.world.point(coord), pheremone):
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
+                p = self.world.point(coord)
+                if hasattr(p, 'pheremones'):
+                    print "found pheremone", p.pheremones, coord 
+                    for i in range(p.pheremones):
+                        self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
+
+            for coord in self.neighbours:
+                multiple = len(self.__moves__)
+                if isinstance(self.world.point(coord), food):
+                    for i in range(multiple):
+                        self.__moves__.append(coord)
+                        self.__moves__.append(coord)
 
         if self.objective == 'hive':
             for coord in self.neighbours:
@@ -70,6 +73,7 @@ class ant(object):
                 else:
                     self.__moves__.append(coord)
 
+        print "moves", self.__moves__
         self.lastPoint = self.location
         self.location = choice(self.neighbours)
        
@@ -89,7 +93,12 @@ class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
     def __init__(self, size, food='random', hive='random'):
-        self.world = [[point]*size]*size
+        self.world = [None]*size
+        for i in range(size):
+             self.world[i] = [point()] * size
+     
+        i#self.world = [[point]*size]*size
+        
         if hive == 'random':
             hLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:
@@ -116,12 +125,13 @@ class world(object):
         return self.world[x][y]
 
     def create_hive(self, hiveLocation):
+        self.hiveLocation = hiveLocation
         x, y = hiveLocation
-        self.world[x][y] = hive(hiveLocation)
+        self.world[x][y] = hive()
 
     def create_food(self, amount=100):
         x, y = self.foodLocation
-        self.world[x][y] = food(self.foodLocation, amount)
+        self.world[x][y] = food(amount)
 
     def show_world(self):
         return self.world
@@ -153,8 +163,8 @@ class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
         or food, or hive.
     '''
-    def __init__(self, location):
-        self.location = location
+    def __init__(self):
+#        self.location = location
         self.neighbours = []
         self.pheremones  = 0
     
@@ -172,8 +182,8 @@ class hive(point):
         figure out if we have reached the end of the simulation.
         
     '''
-    def __init__(self, location):
-        point.__init__(self, location)
+    def __init__(self,):
+        point.__init__(self)
         self.food = 0
 
     def addFood(self):
@@ -182,8 +192,8 @@ class hive(point):
 class food(point):
     ''' Food object. Keeps track of how much food is left. 
     '''
-    def __init__(self, location, amount=100):
-        point.__init__(self, location)
+    def __init__(self, amount=100):
+        point.__init__(self,)
         self.foodLeft = amount
 
     def removeFood(self):
