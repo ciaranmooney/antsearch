@@ -93,12 +93,13 @@ class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
     def __init__(self, size, food='random', hive='random'):
-        self.world = [None]*size
-        for i in range(size):
-             self.world[i] = [point()] * size
-     
-        i#self.world = [[point]*size]*size
+        self.world = []
         
+        for i in range(size):
+            self.world.append([])
+            for j in range(size):
+                self.world[i].append(point())
+     
         if hive == 'random':
             hLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:

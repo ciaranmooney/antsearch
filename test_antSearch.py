@@ -172,6 +172,9 @@ class TestAnt(unittest.TestCase):
         foodLocation = (99,2)
         self.world = antSearch.world(100, hive=hiveLocation, food=foodLocation)
 
+        print "(49,49)", self.world.point((49,49))
+        print "(49,50)", self.world.point((49,50))
+    
     def test_init(self):
         ant = antSearch.ant(self.world)
 
@@ -192,8 +195,14 @@ class TestAnt(unittest.TestCase):
     def test_turn_pheremone(self):
         ant = antSearch.ant(self.world) 
         ant.location = (50,50)
+        self.world.point((49,49)).pheremoneAdd() 
         
-        self.world.point((49,49)).pheremones = 1
+        print "(49,49)", self.world.point((49,49))
+        print "(50,49)", self.world.point((50,49))
+        print "(52,49", self.world.point((52,49))
+        print "(0,49)", self.world.point((0,49))
+        
+        print("\n")
         print "Pheremone test", self.world.point((49,49)).pheremones
 
         possible_moves = self.world.findNeighbours(ant.location) 
