@@ -12,6 +12,8 @@ class ant(object):
     
     '''
     def __init__(self, world):
+        ''' Initialise ant with world that it is going to search.
+        '''    
         self.world = world
         self.have_food = False
         self.location = self.world.hive().location
@@ -74,6 +76,10 @@ class ant(object):
         self.location = choice(self.neighbours)
        
     def leavePheremone(self):
+        ''' When travelling across points with food the ant must leave behind
+            a pheremone trail. This increments the points pheremone counter by
+            one.
+        '''
         pass
     
     def checkSurroundings(self):
@@ -103,30 +109,45 @@ class world(object):
         self.hiveLocation = hLocation
         self.foodLocation = fLocation
 
-        self.create_hive(self.hiveLocation)
+        self.create_hive()
         self.create_food()
         self.totalFood = self.point(self.foodLocation).foodLeft
 
     def hive(self):
+        ''' Convinience method to quickly get the hive object.
+        '''
         x, y = self.hiveLocation
         return self.world[x][y]
 
     def food(self):
+        ''' Convinience method to quickly get the food object.
+        '''
         x, y = self.foodLocation
         return self.world[x][y]
 
-    def create_hive(self, hiveLocation):
-        x, y = hiveLocation
-        self.world[x][y] = hive(hiveLocation)
+    def create_hive(self):
+        ''' Puts a hive object at the location give. Loation is a tuple with
+            (x,y) coords.
+        '''
+        self.world[x][y] = hive(self.hiveLocation)
 
     def create_food(self, amount=100):
-        x, y = self.foodLocation
+        ''' Puts a hive object at the location give. Loation is a tuple with
+            (x,y) coords.
+        '''
         self.world[x][y] = food(self.foodLocation, amount)
 
     def show_world(self):
+        ''' Shows world in a nice text format for printing to terminal with 
+            pheremones, food and hive. Intended to show ants too but this may 
+            not actually happen here and be added on later. Maybe replaced 
+            with __str__()
+        '''
         return self.world
 
     def point(self, coords):
+        ''' Returns what is at a point in the world.
+        '''
         x, y = coords
         return self.world[x][y]
 
