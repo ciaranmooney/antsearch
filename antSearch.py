@@ -152,6 +152,18 @@ class world(object):
         return self.world[x][y]
 
     def findNeighbours(self, coords):
+        ''' Finds coordinates of points around the given point. In ideal case
+            you get 8 valid points. Corner and side cases are treated too.
+            
+            You do not get your original coordinate back.
+
+            If these contain coordinates contain other obstacles this is for
+            the ant to find out.
+
+            Method generates all possible coords for 3x3 square around given 
+            coord. Then discards though that lie out of the boundary of the 
+            world.
+        '''
         x, y = coords
         n = []
         for i in xrange(-1,2):
@@ -165,6 +177,8 @@ class world(object):
         return n 
 
     def __checkCoords__(self, coords):
+        ''' Check if point lies within the boundary of the world.
+        '''
         x, y = coords
         return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
         
