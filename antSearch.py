@@ -12,6 +12,8 @@ class ant(object):
     
     '''
     def __init__(self, world):
+        ''' Initialise ant with world that it is going to search.
+        '''    
         self.world = world
         self.have_food = False
         self.location = self.world.hiveLocation
@@ -78,6 +80,10 @@ class ant(object):
         self.location = choice(self.neighbours)
        
     def leavePheremone(self):
+        ''' When travelling across points with food the ant must leave behind
+            a pheremone trail. This increments the points pheremone counter by
+            one.
+        '''
         pass
     
     def checkSurroundings(self):
@@ -113,35 +119,63 @@ class world(object):
         self.hiveLocation = hLocation
         self.foodLocation = fLocation
 
-        self.create_hive(self.hiveLocation)
+        self.create_hive()
         self.create_food()
         self.totalFood = self.point(self.foodLocation).foodLeft
 
     def hive(self):
+        ''' Convinience method to quickly get the hive object.
+        '''
         x, y = self.hiveLocation
         return self.world[x][y]
 
     def food(self):
+        ''' Convinience method to quickly get the food object.
+        '''
         x, y = self.foodLocation
         return self.world[x][y]
 
     def create_hive(self, hiveLocation):
-        self.hiveLocation = hiveLocation
-        x, y = hiveLocation
+        ''' Puts a hive object at the location give. Loation is a tuple with
+            (x,y) coords.
+        '''
+        x, y = self.hiveLocation
         self.world[x][y] = hive()
 
     def create_food(self, amount=100):
+        ''' Puts a hive object at the location give. Loation is a tuple with
+            (x,y) coords.
+        '''
         x, y = self.foodLocation
         self.world[x][y] = food(amount)
 
     def show_world(self):
+        ''' Shows world in a nice text format for printing to terminal with 
+            pheremones, food and hive. Intended to show ants too but this may 
+            not actually happen here and be added on later. Maybe replaced 
+            with __str__()
+        '''
         return self.world
 
     def point(self, coords):
+        ''' Returns what is at a point in the world.
+        '''
         x, y = coords
         return self.world[x][y]
 
     def findNeighbours(self, coords):
+        ''' Finds coordinates of points around the given point. In ideal case
+            you get 8 valid points. Corner and side cases are treated too.
+            
+            You do not get your original coordinate back.
+
+            If these contain coordinates contain other obstacles this is for
+            the ant to find out.
+
+            Method generates all possible coords for 3x3 square around given 
+            coord. Then discards though that lie out of the boundary of the 
+            world.
+        '''
         x, y = coords
         n = []
         for i in xrange(-1,2):
@@ -155,6 +189,8 @@ class world(object):
         return n 
 
     def __checkCoords__(self, coords):
+        ''' Check if point lies within the boundary of the world.
+        '''
         x, y = coords
         return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
         
