@@ -15,7 +15,7 @@ class ant(object):
         ''' Initialise ant with world that it is going to search.
         '''    
         self.world = world
-        self.have_food = False
+        self.haveFood = False
         self.location = self.world.hiveLocation
         self.lastPoint = None
         self.objective = "food"
@@ -35,11 +35,23 @@ class ant(object):
             look for pheremones
             move (pheremones first priority, then empty)
         '''
+        
+        if self.objective == 'food' and type(self.world.point(self.location)) == food:
+            self.world.food().removeFood()
+            self.haveFood = True
+            self.objective = 'hive'
+
+        if self.objective == 'hive' and type(self.world.point(self.location)) == hive:
+            self.world.hive().addFood()
+            self.haveFood = False
+            self.objective = 'food'
+
         self.move()
 
     def move(self):
         ''' Choose and move to new location
         '''
+        self.moves = []
         self.neighbours = self.world.findNeighbours(self.location) 
         
         if self.lastPoint in self.neighbours:
@@ -49,8 +61,7 @@ class ant(object):
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
-                    print "found pheremone", p.pheremones, coord 
-                    for i in range(p.pheremones):
+                    for i in range(p.pheremones+1):
                         self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
@@ -60,47 +71,38 @@ class ant(object):
                 if isinstance(self.world.point(coord), food):
                     for i in range(multiple):
                         self.__moves__.append(coord)
-                        self.__moves__.append(coord)
 
         if self.objective == 'hive':
             for coord in self.neighbours:
-                if type(self.world.point(coord)) == hive:
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
-
-                elif type(self.world.point(coord)) == pheremone:
-                    self.__moves__.append(coord)
-                    self.__moves__.append(coord)
+                p = self.world.point(coord)
+                if hasattr(p, 'pheremones'):
+                    for i in range(p.pheremones+1):
+                        self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
 
-        print "moves", self.__moves__
+            for coord in self.neighbours:
+                multiple = len(self.__moves__)
+                if isinstance(self.world.point(coord), hive):
+                    for i in range(multiple):
+                        self.__moves__.append(coord)
+
+        self.__moves__.sort()
         self.lastPoint = self.location
         self.location = choice(self.neighbours)
        
-    def leavePheremone(self):
-        ''' When travelling across points with food the ant must leave behind
-            a pheremone trail. This increments the points pheremone counter by
-            one.
-        '''
-        pass
-    
-    def checkSurroundings(self):
-        pass
-
-    def foundFood(self):
-        pass
-
-    def returnHome(self):
-        pass
-
 class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
     def __init__(self, size, food='random', hive='random'):
-        self.world = [[None]*size]*size
+       
+        self.world = []
         
+        for i in range(size):
+            self.world.append([])
+            for j in range(size):
+                self.world[i].append(None)
+     
         if hive == 'random':
             hLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:
@@ -192,13 +194,10 @@ class world(object):
     def addPheremone(self, coords):
         x, y = coords
         if self.point(coords) == None:
-            print "Creating Point"
             self.world[x][y] = point()
         
         p = self.point(coords)
-        print p 
         p.pheremoneAdd()
-        print "Test equal," , p == self.world[x][y]
         
     def removePheremone(self, coords):
         x, y = coords
@@ -217,8 +216,6 @@ class point(object):
         or food, or hive.
     '''
     def __init__(self):
-#        self.location = location
-        self.neighbours = []
         self.pheremones  = 0
     
     def pheremoneDecay(self):
