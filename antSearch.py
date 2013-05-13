@@ -101,11 +101,6 @@ class world(object):
     def __init__(self, size, food='random', hive='random'):
         self.world = [[None]*size]*size
         
-        for i in range(size):
-            self.world.append([])
-            for j in range(size):
-                self.world[i].append(point())
-     
         if hive == 'random':
             hLocation = (random.randint(0,size-1), random.randint(0,size-1))
         else:
@@ -194,7 +189,28 @@ class world(object):
         x, y = coords
         return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
         
-
+    def addPheremone(self, coords):
+        x, y = coords
+        if self.point(coords) == None:
+            print "Creating Point"
+            self.world[x][y] = point()
+        
+        p = self.point(coords)
+        print p 
+        p.pheremoneAdd()
+        print "Test equal," , p == self.world[x][y]
+        
+    def removePheremone(self, coords):
+        x, y = coords
+        p = self.point(coords)
+        if type(p) == None:
+            self.world[x][y] = point()
+            p = self.point(coords)
+        
+        try:
+            p.pheremoneDecay()
+        except:
+            print("Error!") 
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
@@ -211,26 +227,21 @@ class point(object):
     def pheremoneAdd(self):
         self.pheremones += 1
 
-    def find_neighbours(self):
-        self.neighbours.append(stuff)
-
-class hive(point):
+class hive(object):
     ''' Hive object, keeps track of how much food is collected. So that we can
         figure out if we have reached the end of the simulation.
         
     '''
     def __init__(self,):
-        point.__init__(self)
         self.food = 0
 
     def addFood(self):
         self.food += 1
 
-class food(point):
+class food(object):
     ''' Food object. Keeps track of how much food is left. 
     '''
     def __init__(self, amount=100):
-        point.__init__(self,)
         self.foodLeft = amount
 
     def removeFood(self):

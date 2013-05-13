@@ -55,11 +55,9 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(len(World1.world), 100)
         self.assertEqual(len(World1.world[0]), 100)
 
-    def test_create_point(self):
-        coord = (30,20)
-        p = self.World3.point(coord)
-        self.assertEqual(p.pheremones, 0)
-        self.assertEqual(type(p), antSearch.point)
+    def test_world_empty(self):
+        p = self.World3.point((3,3))
+        self.assertEqual(p, None)
 
     def test_create_food(self):
         newWorld = antSearch.world(100, food=(1,1))
@@ -164,6 +162,19 @@ class TestWorld(unittest.TestCase):
         n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
+    def test_addPheremone(self):
+        point = (49,49)
+        self.assertEqual(self.World3.point(point), None)
+        self.World3.addPheremone(point)
+        self.assertEqual(self.World3.point(point).pheremones, 1)
+
+    def test_removePheremone(self):
+        point = (50,50)
+        self.assertEqual(self.World3.point(point), None)
+        self.World3.addPheremone(point)
+        self.assertEqual(self.World3.point(point).pheremones, 1)
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).pheremones, 0)
 
 class TestAnt(unittest.TestCase):
     
@@ -195,7 +206,7 @@ class TestAnt(unittest.TestCase):
     def test_turn_pheremone(self):
         ant = antSearch.ant(self.world) 
         ant.location = (50,50)
-        self.world.point((49,49)).pheremoneAdd() 
+        self.world.addPheremone((49,49)) 
         
         print "(49,49)", self.world.point((49,49))
         print "(50,49)", self.world.point((50,49))
