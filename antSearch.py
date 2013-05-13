@@ -99,7 +99,7 @@ class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
     def __init__(self, size, food='random', hive='random'):
-        self.world = []
+        self.world = [[None]*size]*size
         
         for i in range(size):
             self.world.append([])
