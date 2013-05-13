@@ -135,7 +135,7 @@ class world(object):
         x, y = self.foodLocation
         return self.world[x][y]
 
-    def create_hive(self, hiveLocation):
+    def create_hive(self):
         ''' Puts a hive object at the location give. Loation is a tuple with
             (x,y) coords.
         '''
