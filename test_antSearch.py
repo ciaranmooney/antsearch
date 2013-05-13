@@ -20,7 +20,6 @@ class TestPoint(unittest.TestCase):
 class TestFood(unittest.TestCase):
     
     def setUp(self):
-        self.loc = (10,10)
         self.f = antSearch.food(100)
 
     def test_food(self): 
