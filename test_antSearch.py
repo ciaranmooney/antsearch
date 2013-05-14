@@ -212,7 +212,7 @@ class TestAnt(unittest.TestCase):
 
     def test_turn_food(self):
         ant = antSearch.ant(self.world) 
-        ant.location = self.world.foodLocation
+        ant.location = (98,2) # one away from food
         
         possible_moves = self.world.findNeighbours(ant.location)
         for each in range(len(possible_moves)):
@@ -235,7 +235,12 @@ class TestAnt(unittest.TestCase):
 
         self.assertEqual(ant.objective, 'hive')
         self.assertEqual(ant.haveFood, True)
-        self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1) 
+        self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1)
+
+        new_location = ant.location
+        ant.turn()
+
+        self.assertEqual(self.world.point(new_location).pheremones, 1)
 
     def test_drop_off_food(self):
         ant = antSearch.ant(self.world) 
