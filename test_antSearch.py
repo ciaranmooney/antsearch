@@ -212,7 +212,7 @@ class TestAnt(unittest.TestCase):
 
     def test_turn_food(self):
         ant = antSearch.ant(self.world) 
-        ant.location = (98,2)
+        ant.location = self.world.foodLocation
         
         possible_moves = self.world.findNeighbours(ant.location)
         for each in range(len(possible_moves)):
