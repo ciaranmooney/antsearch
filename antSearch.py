@@ -7,8 +7,12 @@ class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
         random path. Leaving behind a trail of pheremones.
 
-        Ants look randomly, unless they see a pheremone trail. If they see
-        multiple trails they follow the strongest.
+        Ants always move randomly, but they will weight their choices 
+        depending on what is around them.
+        
+        A point is weighted relative to the number of pheremones it 
+        contains. A point with food or a hive is always weighted double 
+        the other points.
     
     '''
     def __init__(self, world):
@@ -23,16 +27,19 @@ class ant(object):
     
     def turn(self):
         '''
+        Controls what an ant does each turn.
+        
         An Ants turn behaviour:
             check objective
             if food, check to see on food point
+            if objective hive then check to see if on hive 
+            
             if objective food the look for pheremones or food
             move (priority food, pheremones, then empty)
 
-            if objective hive then check to see if on hive 
             if objective hive then look for hive
+            
             if not found hive deposit pheremone 
-            look for pheremones
             move (pheremones first priority, then empty)
         '''
         
@@ -49,7 +56,10 @@ class ant(object):
         self.move()
 
     def move(self):
-        ''' Choose and move to new location
+        ''' Finds neighbours from world. Then checks to see what type of point
+            each neighbour it and builds a weighted list.
+            
+            Chooses a random point from that weighted list.
         '''
         self.moves = []
         self.neighbours = self.world.findNeighbours(self.location) 
@@ -122,12 +132,14 @@ class world(object):
 
     def hive(self):
         ''' Convinience method to quickly get the hive object.
+            Returns a hive object.
         '''
         x, y = self.hiveLocation
         return self.world[x][y]
 
     def food(self):
         ''' Convinience method to quickly get the food object.
+            Returns a food object.
         '''
         x, y = self.foodLocation
         return self.world[x][y]
@@ -140,7 +152,7 @@ class world(object):
         self.world[x][y] = hive()
 
     def create_food(self, amount=100):
-        ''' Puts a hive object at the location give. Loation is a tuple with
+        ''' Puts a food object at the location give. Loation is a tuple with
             (x,y) coords.
         '''
         x, y = self.foodLocation
@@ -155,7 +167,8 @@ class world(object):
         return self.world
 
     def point(self, coords):
-        ''' Returns what is at a point in the world.
+        ''' Returns what is at the given coordinate in the world.
+            Can either be None, food, hive or point.
         '''
         x, y = coords
         return self.world[x][y]
@@ -164,7 +177,8 @@ class world(object):
         ''' Finds coordinates of points around the given point. In ideal case
             you get 8 valid points. Corner and side cases are treated too.
             
-            You do not get your original coordinate back.
+            You do not get your original coordinate back. 3x3 grid with hole
+            in the middle.
 
             If these contain coordinates contain other obstacles this is for
             the ant to find out.
@@ -192,6 +206,12 @@ class world(object):
         return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
         
     def addPheremone(self, coords):
+        ''' Leaves a pheremone at the coordinates by incrementing the points
+            pheremone attribute.
+            
+            If there is no point here, one is created and it's pheremone 
+            counter incremented by one.
+        '''
         x, y = coords
         if self.point(coords) == None:
             self.world[x][y] = point()
@@ -200,12 +220,14 @@ class world(object):
         p.pheremoneAdd()
         
     def removePheremone(self, coords):
+        ''' Decreases the pheremone attribute of a point at the coordinates.
+        
+            Tries to decrease attribute, but possibly no point there. Need
+            to catch this error.
+            
+        '''
         x, y = coords
         p = self.point(coords)
-        if type(p) == None:
-            self.world[x][y] = point()
-            p = self.point(coords)
-        
         try:
             p.pheremoneDecay()
         except:
