@@ -3,6 +3,34 @@
 import unittest
 import antSearch
 
+class Simulation(unittest.TestCase):
+    
+    def setUp(self):
+        pass
+
+    def test_simulatin(self):
+        ''' Create a 1x1 grid with food and hive in opposite corners. 
+            Have one ant.
+
+            Run Simulation.
+
+            Check to see that food in hive is 1
+            check to see food point is empty.
+            check that one of the other diagonal points contains pheremones.
+            Should only have 1 pheremone in that point
+
+        '''
+        fLoc = (1,1)
+        hLoc = (0,0)
+        self.world = antSearch.world(1)
+        self.ant = antSearch.ant(self.world)
+        
+        food = self.world.food()
+        food.foodLeft = 1
+        
+        self.assertEqual(self.world.hive(), antSearch.hive)
+        self.assertEqual(self.world.food(), food)
+
 class TestPoint(unittest.TestCase):
     
     def setUp(self):
@@ -37,7 +65,6 @@ class TestHive(unittest.TestCase):
         self.h.addFood()
         self.assertEqual(self.h.food, 1)
 
-
 class TestWorld(unittest.TestCase):
     
     def setUp(self):
@@ -61,9 +88,20 @@ class TestWorld(unittest.TestCase):
         newWorld = antSearch.world(100, food=(1,1))
         self.assertEqual(newWorld.point((12,13)), None)
         self.assertEqual(type(newWorld.point((1,1))), antSearch.food)
-        food = newWorld.point((1,1))
+        food = newWorld.food()
         self.assertEqual(newWorld.point((1,1)).foodLeft, 100)
         self.assertEqual(newWorld.totalFood, 100)
+
+    def test_change_food(self):
+        newWorld = antSearch.world(100, food=(1,1))
+        food = newWorld.food()
+        self.assertEqual(food.foodLeft, 100)
+        self.assertEqual(newWorld.food().foodLeft, 100)
+
+        food.foodLeft = 1
+
+        self.assertEqual(food.foodLeft, 1)
+        self.assertEqual(newWorld.food().foodLeft, 1)
 
     def test_create_hive(self):
         hiveLocation = (10,10)

@@ -3,6 +3,34 @@
 import random
 from random import choice
 
+class Simulation(unittest.TestCase):
+    
+    def setUp(self):
+        ''' Create a 1x1 grid with food and hive in opposite corners. 
+            Have one ant.
+
+            Run Simulation.
+
+            Check to see that food in hive is 1
+            check to see food point is empty.
+            check that one of the other diagonal points contains pheremones.
+            Should only have 1 pheremone in that point
+
+        '''
+        fLoc = (1,1)
+        hLoc = (0,0)
+        self.world = antSearch.world(1)
+        self.ant = antSearch.ant(self.world)
+        
+        food = self.world.food()
+        food.foodLeft = 1
+        
+        self.assertEqual(self.world.hive(), antSearch.hive)
+        self.assertEqual(self.world.food(), food)
+
+    def test_simulatin(self):
+        pass
+
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
         random path. Leaving behind a trail of pheremones.
@@ -265,3 +293,5 @@ class food(object):
     def removeFood(self):
         self.foodLeft -= 1
 
+if __name__ == '__main()__':
+    pass
