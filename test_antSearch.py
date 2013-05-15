@@ -189,6 +189,18 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(ant.location, self.world.hiveLocation)
         self.assertEqual(ant.objective, 'food')
 
+    def test_leave_pheremone(self):
+        ant = antSearch.ant(self.world)
+        original_location = (50,50)
+        ant.location = original_location
+        ant.haveFood = True
+
+        self.assertEqual(self.world.point(ant.location), None)
+
+        ant.turn()
+
+        self.assertEqual(self.world.point(original_location).pheremones, 1)
+        
     def test_turn(self):
         ant = antSearch.ant(self.world) 
         
@@ -238,6 +250,8 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1)
 
         new_location = ant.location
+
+        self.assertNotEqual(ant.location, self.world.foodLocation)
         ant.turn()
 
         self.assertEqual(self.world.point(new_location).pheremones, 1)

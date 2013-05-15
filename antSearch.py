@@ -53,6 +53,7 @@ class ant(object):
             self.haveFood = False
             self.objective = 'food'
 
+        self.world.addPheremone(self.location)
         self.move()
 
     def move(self):
@@ -100,7 +101,7 @@ class ant(object):
         self.__moves__.sort()
         self.lastPoint = self.location
         self.location = choice(self.neighbours)
-       
+
 class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
@@ -215,10 +216,9 @@ class world(object):
         x, y = coords
         if self.point(coords) == None:
             self.world[x][y] = point()
-        
-        p = self.point(coords)
-        p.pheremoneAdd()
-        
+            p = self.point(coords)
+            p.pheremoneAdd()
+       
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
         
