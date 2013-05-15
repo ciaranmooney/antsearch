@@ -160,12 +160,29 @@ class TestWorld(unittest.TestCase):
         n = self.World3.findNeighbours(centre1)
         self.assertEqual(n, n_sol)
 
-    def test_addPheremone(self):
+    def test_addPheremone_empty_point(self):
         point = (49,49)
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
         self.assertEqual(self.World3.point(point).pheremones, 1)
 
+    def test_addPheremone_hive_point(self):
+        h = self.World3.hive()
+        f = self.World3.food()
+        
+        hCheck = hasattr(h, 'pheremones')
+        fCheck = hasattr(f, 'pheremones')
+        self.assertFalse(fCheck)
+        self.assertFalse(hCheck)
+
+        self.World3.addPheremone(self.World3.hiveLocation)
+        self.World3.addPheremone(self.World3.foodLocation)
+
+        hCheck = hasattr(h, 'pheremones')
+        fCheck = hasattr(f, 'pheremones')
+        self.assertFalse(fCheck)
+        self.assertFalse(hCheck)
+    
     def test_removePheremone(self):
         point = (50,50)
         self.assertEqual(self.World3.point(point), None)
