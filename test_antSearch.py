@@ -281,6 +281,11 @@ class TestWorld(unittest.TestCase):
         self.World3.turn()
         self.assertTrue(self.World3.finished)
 
+    def test_print_world(self):
+        ''' World will have spaces where there are Nones,
+        '''
+        pass
+
 class TestAnt(unittest.TestCase):
     
     def setUp(self):
