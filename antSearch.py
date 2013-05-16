@@ -8,11 +8,15 @@ class simulation(object):
     '''
 
     def __init__(self, ants, world):
+        '''
+        '''
         self.ants = ants
         self.world = world
         print self.ants
 
     def run(self):
+        '''
+        '''
         print "Running"
         while not self.world.finished:
             print "Turning ants"    
@@ -258,6 +262,11 @@ class world(object):
             p.pheremoneDecay()
         except:
             print("Error!") 
+
+    def pheremoneDecay(self):
+        '''
+        '''
+        pass
 
     def turn(self):
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
