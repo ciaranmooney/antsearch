@@ -28,7 +28,8 @@ class Simulation(unittest.TestCase):
        
         food = self.world.food()
         food.foodLeft = 1
-      
+        self.world.totalFood = 1
+
         self.assertEqual(self.world.food(), food)
         self.assertEqual(type(self.world.hive()), antSearch.hive)
 
@@ -42,8 +43,8 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        pheremones1 = self.world.point(1,0).pheremones
-        pheremones2 = self.world.point(0,1).pheremones
+        pheremones1 = self.world.point((1,0)).pheremones
+        pheremones2 = self.world.point((0,1)).pheremones
         
         check = (pheremones1 == 1) or (pheremones2 == 1)
 

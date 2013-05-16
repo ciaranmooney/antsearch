@@ -10,9 +10,22 @@ class simulation(object):
     def __init__(self, ants, world):
         self.ants = ants
         self.world = world
+        print self.ants
 
     def run(self):
-        pass
+        print "Running"
+        while not self.world.finished:
+            print "Turning ants"    
+            for ant in self.ants:
+                print "Ant turn", ant
+                ant.turn()
+                print "Found food?", ant.haveFood
+            print "World, turn"
+            self.world.turn()
+            print "Hive food.", self.world.hive().food
+            print "Food", self.world.food().foodLeft
+            print "Total food", self.world.totalFood
+            print "World finished?", self.world.finished
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
