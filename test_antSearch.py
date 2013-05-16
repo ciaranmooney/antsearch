@@ -22,14 +22,32 @@ class Simulation(unittest.TestCase):
         '''
         fLoc = (1,1)
         hLoc = (0,0)
-        self.world = antSearch.world(1)
-        self.ant = antSearch.ant(self.world)
-        
+        self.world = antSearch.world(2, fLoc, hLoc)
+        self.ants = []
+        self.ants.append(antSearch.ant(self.world))
+       
         food = self.world.food()
         food.foodLeft = 1
-        
-        self.assertEqual(self.world.hive(), antSearch.hive)
+      
         self.assertEqual(self.world.food(), food)
+        self.assertEqual(type(self.world.hive()), antSearch.hive)
+
+        self.assertEqual(self.world.hive().food, 0)
+        self.assertEqual(self.world.food().foodLeft, 1)
+        
+        sim = antSearch.simulation(self.ants, self.world)
+
+        sim.run()
+
+        self.assertEqual(self.world.hive().food, 1)
+        self.assertEqual(self.world.food().foodLeft, 0)
+
+        pheremones1 = self.world.point(1,0).pheremones
+        pheremones2 = self.world.point(0,1).pheremones
+        
+        check = (pheremones1 == 1) or (pheremones2 == 1)
+
+        self.assertTrue(check)
 
 class TestPoint(unittest.TestCase):
     
@@ -92,6 +110,14 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(newWorld.point((1,1)).foodLeft, 100)
         self.assertEqual(newWorld.totalFood, 100)
 
+        fLoc = (1,1)
+        hLoc = (0,0)
+        World2 = antSearch.world(2, fLoc, hLoc)
+        
+        self.assertEqual(type(World2.point(fLoc)), antSearch.food)
+        self.assertEqual(type(World2.point(hLoc)), antSearch.hive)
+
+
     def test_change_food(self):
         newWorld = antSearch.world(100, food=(1,1))
         food = newWorld.food()
@@ -130,14 +156,14 @@ class TestWorld(unittest.TestCase):
         foodLocation = (52,40)
         World2 = antSearch.world(100, food=foodLocation)
         
-        self.assert(World2.food().foodLeft, 100)
-        self.assert(World2.hive().foodLeft, 0)
+        self.assertEqual(World2.food().foodLeft, 100)
+        self.assertEqual(World2.hive().food, 0)
         
         World2.food().foodLeft = 0
-        World2.hive().foodLeft = 0
+        World2.hive().food = 100 
         
-        self.assert(World2.hive().foodLeft, 100)
-        self.assert(World2.food().foodLeft, 0)
+        self.assertEqual(World2.hive().food, 100)
+        self.assertEqual(World2.food().foodLeft, 0)
 
     def test_find_neighbours(self):
         centre1 = (11,34)
@@ -241,6 +267,18 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(self.World3.point(point).pheremones, 1)
         self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).pheremones, 0)
+
+    def test_turn(self):
+        self.assertFalse(self.World3.finished) 
+        self.World3.turn()
+        self.assertFalse(self.World3.finished) 
+
+        self.World3.hive().food = self.World3.food().foodLeft
+        self.World3.food().foodLeft = 0
+
+        self.assertFalse(self.World3.finished) 
+        self.World3.turn()
+        self.assertTrue(self.World3.finished)
 
 class TestAnt(unittest.TestCase):
     

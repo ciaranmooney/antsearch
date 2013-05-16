@@ -3,32 +3,15 @@
 import random
 from random import choice
 
-class Simulation(unittest.TestCase):
-    
-    def setUp(self):
-        ''' Create a 1x1 grid with food and hive in opposite corners. 
-            Have one ant.
+class simulation(object):
+    '''
+    '''
 
-            Run Simulation.
+    def __init__(self, ants, world):
+        self.ants = ants
+        self.world = world
 
-            Check to see that food in hive is 1
-            check to see food point is empty.
-            check that one of the other diagonal points contains pheremones.
-            Should only have 1 pheremone in that point
-
-        '''
-        fLoc = (1,1)
-        hLoc = (0,0)
-        self.world = antSearch.world(1)
-        self.ant = antSearch.ant(self.world)
-        
-        food = self.world.food()
-        food.foodLeft = 1
-        
-        self.assertEqual(self.world.hive(), antSearch.hive)
-        self.assertEqual(self.world.food(), food)
-
-    def test_simulatin(self):
+    def run(self):
         pass
 
 class ant(object):
@@ -157,7 +140,9 @@ class world(object):
 
         self.create_hive()
         self.create_food()
-        self.totalFood = self.point(self.foodLocation).foodLeft
+        self.totalFood = self.food().foodLeft
+
+        self.finished = False
 
     def hive(self):
         ''' Convinience method to quickly get the hive object.
@@ -260,6 +245,10 @@ class world(object):
             p.pheremoneDecay()
         except:
             print("Error!") 
+
+    def turn(self):
+        if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
+            self.finished = True
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
