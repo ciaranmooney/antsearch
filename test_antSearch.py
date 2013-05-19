@@ -307,7 +307,9 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
         self.assertEqual(self.World3.point(point).pheremones, 1)
-
+        self.World3.addPheremone(point)
+        self.assertEqual(self.World3.point(point).pheremones, 2)
+    
     def test_addPheremone_hive_point(self):
         '''
         '''
@@ -337,7 +339,7 @@ class TestWorld(unittest.TestCase):
         self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).pheremones, 0)
 
-    def test_turn(self):
+    def test_turn_world_finished(self):
         '''
         '''
         self.assertFalse(self.World3.finished) 
@@ -350,6 +352,25 @@ class TestWorld(unittest.TestCase):
         self.assertFalse(self.World3.finished) 
         self.World3.turn()
         self.assertTrue(self.World3.finished)
+
+    def test_turn_pheremone_decay(self):
+        '''
+        '''
+        p = (21,10)
+
+        for i in range(3):
+            self.World3.addPheremone(p)
+        
+        self.assertEqual(self.World3.point(p).pheremones, 3) 
+
+        self.World3.turn()
+
+        self.assertEqual(self.World3.point(p).pheremones, 3) 
+
+        for i in range(9):
+            self.World3.turn()
+
+        self.assertEqual(self.World3.point(p).pheremones, 2)
 
     def test_print_world(self):
         ''' World will have spaces where there are Nones,

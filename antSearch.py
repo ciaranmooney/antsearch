@@ -248,7 +248,11 @@ class world(object):
             self.world[x][y] = point()
             p = self.point(coords)
             p.pheremoneAdd()
-       
+    
+        if self.point(coords) == point:
+            p = self.point(coords)
+            p.pheremoneAdd()
+        
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
         
@@ -280,6 +284,7 @@ class point(object):
         self.pheremones  = 0
     
     def pheremoneDecay(self):
+        ## XXX Need to make sure this doesn't go below zero!
         self.pheremones -= 1
     
     def pheremoneAdd(self):
