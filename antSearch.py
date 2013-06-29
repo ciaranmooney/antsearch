@@ -245,11 +245,13 @@ class world(object):
         '''
         x, y = coords
         if self.point(coords) == None:
+            print("called first")
             self.world[x][y] = point()
             p = self.point(coords)
             p.pheremoneAdd()
-    
-        if self.point(coords) == point:
+            
+        elif type(self.point(coords)) == point:
+            print("called second")
             p = self.point(coords)
             p.pheremoneAdd()
         
