@@ -136,6 +136,7 @@ class world(object):
     def __init__(self, size, food='random', hive='random'):
        
         self.world = []
+        self.pheremones = []
         
         for i in range(size):
             self.world.append([])
@@ -245,15 +246,17 @@ class world(object):
         '''
         x, y = coords
         if self.point(coords) == None:
-            print("called first")
             self.world[x][y] = point()
             p = self.point(coords)
             p.pheremoneAdd()
+            if coords not in self.pheremones:
+				self.pheremones.append(coords)
             
         elif type(self.point(coords)) == point:
-            print("called second")
             p = self.point(coords)
             p.pheremoneAdd()
+            if coords not in self.pheremones:
+				self.pheremones.append(coords)
         
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
@@ -272,11 +275,16 @@ class world(object):
     def pheremoneDecay(self):
         '''
         '''
-        pass
+        # Should probably keep track of which points have pheremones.
+        # Otherwise I'll have to go through all points to find them.
+        for point in self.pheremones:
+			self.removePheremone(point)
 
     def turn(self):
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
+        
+        self.pheremoneDecay()
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
@@ -287,7 +295,10 @@ class point(object):
     
     def pheremoneDecay(self):
         ## XXX Need to make sure this doesn't go below zero!
-        self.pheremones -= 1
+        if self.pheremones == 0:
+            pass
+        else:	
+            self.pheremones -= 1
     
     def pheremoneAdd(self):
         self.pheremones += 1
