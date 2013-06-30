@@ -137,6 +137,7 @@ class world(object):
        
         self.world = []
         self.pheremones = []
+        self.pheremoneDecayRate = 10
         
         for i in range(size):
             self.world.append([])
@@ -284,6 +285,9 @@ class world(object):
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
         
+        for point in self.pheremones:
+			print("Pheremones ", point, " : ", self.point(point).pheremones)
+			
         self.pheremoneDecay()
 
 class point(object):
@@ -294,7 +298,6 @@ class point(object):
         self.pheremones  = 0
     
     def pheremoneDecay(self):
-        ## XXX Need to make sure this doesn't go below zero!
         if self.pheremones == 0:
             pass
         else:	

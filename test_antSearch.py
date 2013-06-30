@@ -46,7 +46,9 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.food().foodLeft, 0)
 
         pheremones1 = self.world.point((1,0)).pheremones
+        print(pheremones1)
         pheremones2 = self.world.point((0,1)).pheremones
+        print(pheremones2)
         
         check = (pheremones1 == 1) or (pheremones2 == 1)
 
@@ -402,6 +404,12 @@ class TestWorld(unittest.TestCase):
 
         for i in coords:
             self.assertEqual(World2.point(i).pheremones, 0)
+
+	def test_pheremone_list(self):
+		''' Test that when pheremone reaches 0 that it is removed from
+			the pheremone list.
+		'''
+		pass
 
 class TestAnt(unittest.TestCase):
     '''
