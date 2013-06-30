@@ -10,7 +10,7 @@ class Simulation(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_simulatin(self):
+    def test_simulation(self):
         ''' Create a 1x1 grid with food and hive in opposite corners. 
             Have one ant.
 
@@ -73,6 +73,8 @@ class TestPoint(unittest.TestCase):
         '''
         self.p.pheremoneAdd()    
         self.assertEqual(self.p.pheremones, 1)
+        self.p.pheremoneDecay()
+        self.assertEqual(self.p.pheremones, 0)
         self.p.pheremoneDecay()
         self.assertEqual(self.p.pheremones, 0)
 

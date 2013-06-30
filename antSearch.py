@@ -276,19 +276,18 @@ class world(object):
     def pheremoneDecay(self):
         '''
         '''
-        # Should probably keep track of which points have pheremones.
-        # Otherwise I'll have to go through all points to find them.
         for point in self.pheremones:
-			self.removePheremone(point)
+            self.removePheremone(point)
 
     def turn(self):
+        '''
+        '''
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
         
-        for point in self.pheremones:
-			print("Pheremones ", point, " : ", self.point(point).pheremones)
-			
         self.pheremoneDecay()
+        self.pheremones = filter(lambda x: self.point(x).pheremones != 0, self.pheremones)
+        
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
