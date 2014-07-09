@@ -11,7 +11,7 @@ class Simulation(unittest.TestCase):
         pass
 
     def test_simulation(self):
-        ''' Create a 1x1 grid with food and hive in opposite corners. 
+        ''' Create a 2x2 grid with food and hive in opposite corners. 
             Have one ant.
 
             Run Simulation.
@@ -407,11 +407,11 @@ class TestWorld(unittest.TestCase):
         for i in coords:
             self.assertEqual(World2.point(i).pheremones, 0)
 
-	def test_pheremone_list(self):
-		''' Test that when pheremone reaches 0 that it is removed from
-			the pheremone list.
-		'''
-		pass
+    def test_pheremone_list(self):
+        ''' Test that when pheremone reaches 0 that it is removed from
+            the pheremone list.
+        '''
+        pass
 
 class TestAnt(unittest.TestCase):
     '''

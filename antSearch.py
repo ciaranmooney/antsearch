@@ -12,24 +12,24 @@ class simulation(object):
         '''
         self.ants = ants
         self.world = world
-        print self.ants
+        print(self.ants)
 
     def run(self):
         '''
         '''
-        print "Running"
+        print("Running")
         while not self.world.finished:
-            print "Turning ants"    
+            print("Turning ants")   
             for ant in self.ants:
-                print "Ant turn", ant
+                print("Ant turn", ant)
                 ant.turn()
-                print "Found food?", ant.haveFood
-            print "World, turn"
+                print("Found food?", ant.haveFood)
+            print("World, turn")
             self.world.turn()
-            print "Hive food.", self.world.hive().food
-            print "Food", self.world.food().foodLeft
-            print "Total food", self.world.totalFood
-            print "World finished?", self.world.finished
+            print("Hive food.", self.world.hive().food)
+            print("Food", self.world.food().foodLeft)
+            print("Total food", self.world.totalFood)
+            print("World finished?", self.world.finished)
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
@@ -251,13 +251,13 @@ class world(object):
             p = self.point(coords)
             p.pheremoneAdd()
             if coords not in self.pheremones:
-				self.pheremones.append(coords)
+                self.pheremones.append(coords)
             
         elif type(self.point(coords)) == point:
             p = self.point(coords)
             p.pheremoneAdd()
             if coords not in self.pheremones:
-				self.pheremones.append(coords)
+                self.pheremones.append(coords)
         
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
