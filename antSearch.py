@@ -19,17 +19,20 @@ class simulation(object):
         '''
         print("Running")
         while not self.world.finished:
+            print("=============")
             print("Turning ants")   
             for ant in self.ants:
                 print("Ant turn", ant)
                 ant.turn()
                 print("Found food?", ant.haveFood)
+            print("=============")
             print("World, turn")
             self.world.turn()
             print("Hive food.", self.world.hive().food)
             print("Food", self.world.food().foodLeft)
             print("Total food", self.world.totalFood)
             print("World finished?", self.world.finished)
+            print("=====xxxx========")
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
@@ -71,7 +74,10 @@ class ant(object):
             move (pheremones first priority, then empty)
         '''
         
+        print("Objective", self.objective)
+        
         if self.objective == 'food' and type(self.world.point(self.location)) == food:
+            print("Got food!")
             self.world.food().removeFood()
             self.haveFood = True
             self.objective = 'hive'
@@ -81,7 +87,11 @@ class ant(object):
             self.haveFood = False
             self.objective = 'food'
 
-        self.world.addPheremone(self.location)
+        if self.objective == 'hive' and self.haveFood == True:
+            print("Ant adding pheremones")
+            print(self.location)
+            self.world.addPheremone(self.location)
+        
         self.move()
 
     def move(self):
@@ -222,8 +232,8 @@ class world(object):
         '''
         x, y = coords
         n = []
-        for i in xrange(-1,2):
-            for j in xrange(-1,2):
+        for i in range(-1,2):
+            for j in range(-1,2):
                 n.append((x+i,y+j))
         n.sort()
 
@@ -246,18 +256,22 @@ class world(object):
             counter incremented by one.
         '''
         x, y = coords
+        print(self.point(coords))
         if self.point(coords) == None:
+            print("No point at", coords)
             self.world[x][y] = point()
-            p = self.point(coords)
-            p.pheremoneAdd()
+            self.world[x][y].pheremoneAdd()
             if coords not in self.pheremones:
+                print(self.pheremones)
                 self.pheremones.append(coords)
-            
+                print(self.pheremones)
+			    
         elif type(self.point(coords)) == point:
-            p = self.point(coords)
-            p.pheremoneAdd()
+            print("Point at", coords)
+            self.world[x][y].pheremoneAdd()
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
+                print(self.pheremones)
         
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
@@ -272,21 +286,32 @@ class world(object):
             p.pheremoneDecay()
         except:
             print("Error!") 
-
-    def pheremoneDecay(self):
+            
+    def pheremonesLeft(self, point):
+        ''' Checks point to see if pheremones > 0
+        
         '''
+        
+        return self.point(point).pheremones != 0
+        
+    def pheremoneDecay(self):
+        ''' Decreases the pheremone count by one.
+			Tidies up self.pheremones to only include points with
+			pheremones > 0
         '''
         for point in self.pheremones:
             self.removePheremone(point)
+        
+        self.pheremones = filter(self.pheremonesLeft, self.pheremones)
+        self.pheremones = list(self.pheremones)
 
     def turn(self):
         '''
         '''
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
-        
-        self.pheremoneDecay()
-        self.pheremones = filter(lambda x: self.point(x).pheremones != 0, self.pheremones)
+            
+        #self.pheremoneDecay()
         
 
 class point(object):

@@ -11,7 +11,7 @@ class Simulation(unittest.TestCase):
         pass
 
     def test_simulation(self):
-        ''' Create a 2x2 grid with food and hive in opposite corners. 
+        ''' Create a 3x3 grid with food and hive in opposite corners. 
             Have one ant.
 
             Run Simulation.
@@ -22,9 +22,9 @@ class Simulation(unittest.TestCase):
             Should only have 1 pheremone in that point
 
         '''
-        fLoc = (1,1)
+        fLoc = (2,2)
         hLoc = (0,0)
-        self.world = antSearch.world(2, fLoc, hLoc)
+        self.world = antSearch.world(3, fLoc, hLoc)
         self.ants = []
         self.ants.append(antSearch.ant(self.world))
        
@@ -45,10 +45,18 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        pheremones1 = self.world.point((1,0)).pheremones
-        print(pheremones1)
-        pheremones2 = self.world.point((0,1)).pheremones
-        print(pheremones2)
+        try:
+            pheremones1 = self.world.point((1,0)).pheremones
+        except AttributeError:
+            pheremones1 = 0
+			
+        print("Pheremones at (1,0)", pheremones1)
+        
+        try:
+            pheremones2 = self.world.point((0,1)).pheremones
+        except AttributeError:
+            pheremones2 = 0
+        print("Pheremones at (0,1)", pheremones2)
         
         check = (pheremones1 == 1) or (pheremones2 == 1)
 
