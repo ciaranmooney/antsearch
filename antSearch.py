@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+# TODO
+# Decay should be a rate, need a step counter of world.
+
 import random
 from random import choice
 
