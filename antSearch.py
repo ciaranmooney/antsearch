@@ -56,7 +56,6 @@ class ant(object):
         self.haveFood = False
         self.location = self.world.hiveLocation
         self.lastPoint = None
-        self.objective = "food"
         self.__moves__ = []
     
     def turn(self):
@@ -79,18 +78,16 @@ class ant(object):
         
         print("Objective", self.objective)
         
-        if self.objective == 'food' and type(self.world.point(self.location)) == food:
+        if self.haveFood == False and type(self.world.point(self.location)) == food:
             print("Got food!")
             self.world.food().removeFood()
             self.haveFood = True
-            self.objective = 'hive'
 
-        if self.objective == 'hive' and type(self.world.point(self.location)) == hive:
+        if self.haveFood == True and type(self.world.point(self.location)) == hive:
             self.world.hive().addFood()
             self.haveFood = False
-            self.objective = 'food'
 
-        if self.objective == 'hive' and self.haveFood == True:
+        if self.haveFood == True and type(self.world.point(self.location)) != food:
             print("Ant adding pheremones")
             print(self.location)
             self.world.addPheremone(self.location)
@@ -274,7 +271,7 @@ class world(object):
             self.world[x][y].pheremoneAdd()
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
-                print(self.pheremones)
+            print(self.pheremones)
         
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.

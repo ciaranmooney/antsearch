@@ -449,6 +449,7 @@ class TestAnt(unittest.TestCase):
         original_location = (50,50)
         ant.location = original_location
         ant.haveFood = True
+        ant.objective = "hive"
 
         self.assertEqual(self.world.point(ant.location), None)
 
