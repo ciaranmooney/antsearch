@@ -1,7 +1,13 @@
 #! /usr/bin/env python
 
 # TODO
-# Decay should be a rate, need a step counter of world.
+# [] Decay should be a rate, need a step counter of world.
+# [] Re-read and comment all tests
+# [] Re-write tests to use the "setUP" function rather than creating new
+#    worlds each time.
+# [] Write tests for point class
+# [] Write food class - unnecessary
+# [] Write PyGame visuatilsation
 
 import random
 from random import choice
@@ -75,7 +81,7 @@ class ant(object):
         '''
         
         if self.haveFood == False and type(self.world.point(self.location)) == food:
-            print("Got food!")
+            #print("Got food!")
             self.world.food().removeFood()
             self.haveFood = True
 
@@ -84,8 +90,8 @@ class ant(object):
             self.haveFood = False
 
         if self.haveFood == True and type(self.world.point(self.location)) != food:
-            print("Ant adding pheremones")
-            print(self.location)
+            #print("Ant adding pheremones")
+            #print(self.location)
             self.world.addPheremone(self.location)
         
         self.move()
@@ -139,11 +145,12 @@ class ant(object):
 class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
-    def __init__(self, size, food='random', hive='random'):
+    def __init__(self, size, food='random', hive='random', pheremoneDecay=10):
        
         self.world = []
         self.pheremones = []
-        self.pheremoneDecayRate = 10
+        self.pheremoneDecayRate = pheremoneDecay
+        self.steps = 0
         
         for i in range(size):
             self.world.append([])
@@ -252,22 +259,22 @@ class world(object):
             counter incremented by one.
         '''
         x, y = coords
-        print(self.point(coords))
+        #print(self.point(coords))
         if self.point(coords) == None:
-            print("No point at", coords)
+            #print("No point at", coords)
             self.world[x][y] = point()
             self.world[x][y].pheremoneAdd()
             if coords not in self.pheremones:
-                print(self.pheremones)
+                #print(self.pheremones)
                 self.pheremones.append(coords)
-                print(self.pheremones)
+                #print(self.pheremones)
 			    
         elif type(self.point(coords)) == point:
-            print("Point at", coords)
+            #print("Point at", coords)
             self.world[x][y].pheremoneAdd()
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
-            print(self.pheremones)
+            #print(self.pheremones)
         
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
@@ -307,7 +314,11 @@ class world(object):
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
             
-        #self.pheremoneDecay()
+        if self.steps % self.pheremoneDecayRate:
+            self.pheremoneDecay()
+            
+        self.steps += 1
+        
         
 
 class point(object):

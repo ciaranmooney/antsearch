@@ -51,8 +51,8 @@ class Simulation(unittest.TestCase):
         self.assertTrue(check)
 
 class TestPoint(unittest.TestCase):
-    '''
-    '''
+    ''' Tests for the Point Class
+    ''' 
 
     def setUp(self):
         '''
@@ -75,7 +75,7 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.pheremones, 0)
 
 class TestFood(unittest.TestCase):
-    '''
+    ''' Tests for food class.
     '''
 
     def setUp(self):
@@ -91,7 +91,7 @@ class TestFood(unittest.TestCase):
         self.assertEqual(self.f.foodLeft, 99)
 
 class TestHive(unittest.TestCase):
-    '''
+    ''' Tests for food hive class.
     '''
 
     def setUp(self):
@@ -107,54 +107,50 @@ class TestHive(unittest.TestCase):
         self.assertEqual(self.h.food, 1)
 
 class TestWorld(unittest.TestCase):
-    '''
+    ''' Tests for World class.
     '''
 
     def setUp(self):
-        '''
+        ''' 
         '''
         self.find_neighbours_setUp()
     
     def find_neighbours_setUp(self):
-        '''
+        ''' Creates a new attribute for the test class that is "plain".
+            Creates a "default" hive and food location.
         '''
         hiveLocation = (10,10)
         foodLocation = (99,2)
         self.World3 = antSearch.world(100, hive=hiveLocation, food=foodLocation)
     
     def test_create(self):
-        '''
+        ''' Creates world and checks that the overall size is correct 
+            and that the size of the zeroth row is correct.
         '''
         World1 = antSearch.world(100)
         self.assertEqual(len(World1.world), 100)
         self.assertEqual(len(World1.world[0]), 100)
 
     def test_world_empty(self):
-        '''
+        ''' Tests that the world that has been created is empty at 
+            (3,3).
         '''
         p = self.World3.point((3,3))
         self.assertEqual(p, None)
 
     def test_create_food(self):
-        '''
+        ''' Tests creating a new world, adding food and checking that
+            the totals all match up.
         '''
         newWorld = antSearch.world(100, food=(1,1))
+        
         self.assertEqual(newWorld.point((12,13)), None)
-        self.assertEqual(type(newWorld.point((1,1))), antSearch.food)
-        food = newWorld.food()
+        self.assertEqual(type(newWorld.point((1,1))), antSearch.food)    
         self.assertEqual(newWorld.point((1,1)).foodLeft, 100)
         self.assertEqual(newWorld.totalFood, 100)
 
-        fLoc = (1,1)
-        hLoc = (0,0)
-        World2 = antSearch.world(2, fLoc, hLoc)
-        
-        self.assertEqual(type(World2.point(fLoc)), antSearch.food)
-        self.assertEqual(type(World2.point(hLoc)), antSearch.hive)
-
-
     def test_change_food(self):
-        '''
+        ''' 
         '''
         newWorld = antSearch.world(100, food=(1,1))
         food = newWorld.food()
@@ -355,59 +351,89 @@ class TestWorld(unittest.TestCase):
         self.World3.turn()
         self.assertTrue(self.World3.finished)
 
-    def test_turn_pheremone_decay(self):
-        '''
-        '''
-        p = (21,10)
-
-        for i in range(3):
-            self.World3.addPheremone(p)
-        
-        self.assertEqual(self.World3.point(p).pheremones, 3) 
-
-        self.World3.turn()
-
-        self.assertEqual(self.World3.point(p).pheremones, 2) 
-
-        self.World3.turn()
-
-        self.assertEqual(self.World3.point(p).pheremones, 1)
-
     def test_print_world(self):
         ''' World will have spaces where there are Nones,
         '''
-        pass
+        self.assertTrue(False)
 
-    def test_pheremone_decay(self):
+    def test_pheremoneDecay(self):
+        ''' Tests that pheremoneDecay method reduces a number of 
+            different points pheremone count by one. Also checks that
+            pheremonedecay method does not go below zero.
+            
         '''
-        '''
-        foodLocation = (52,40)
-        hiveLocation = (1,1)
-        World2 = antSearch.world(100, food=foodLocation, hive=hiveLocation)
+        coords = [(2,10),(10,2),(5,30),(55,21),(59,60),(82,15)]
         
+        for i in coords:
+            self.World3.addPheremone(i)
+
+        for i in coords:
+            self.assertEqual(self.World3.point(i).pheremones, 1)
+
+        self.World3.pheremoneDecay()
+
+        for i in coords:
+            self.assertEqual(self.World3.point(i).pheremones, 0)
+            
+        self.World3.pheremoneDecay()
+
+        for i in coords:
+            self.assertEqual(self.World3.point(i).pheremones, 0)
+        
+    def test_pheremonDecay_rate(self):
+        ''' Checks that the pheremone decay of a world happens at the 
+            rate specific (ie per number of turns)
+        '''
         coords = [(2,10),(10,2),(5,30),(55,21),(59,60),(82,15)]
 
         for i in coords:
-            World2.addPheremone(i)
-
+            self.World3.addPheremone(i)
+        
         for i in coords:
-            self.assertEqual(World2.point(i).pheremones, 1)
-
-        World2.pheremoneDecay()
-
+            self.assertEqual(self.World3.point(i).pheremones, 1)
+        
+        self.World3.turn()
+        
         for i in coords:
-            self.assertEqual(World2.point(i).pheremones, 0)
+            self.assertEqual(self.World3.point(i).pheremones, 1)
             
-        World2.pheremoneDecay()
-
+        while self.World3.steps < 10:
+            self.World3.turn()
+        
         for i in coords:
-            self.assertEqual(World2.point(i).pheremones, 0)
+            self.assertEqual(self.World3.point(i).pheremones, 0)
+            
 
     def test_pheremone_list(self):
         ''' Test that when pheremone reaches 0 that it is removed from
             the pheremone list.
         '''
-        pass
+        self.World3.addPheremone((1,1))
+
+        self.assertEqual(self.World3.point((1,1)).pheremones, 1)
+
+        self.World3.pheremoneDecay()
+        
+        self.assertEqual(self.World3.point((1,1)).pheremones, 0)
+        self.assertTrue((1,1) not in self.World3.pheremones)
+
+        self.assertTrue(False)
+        
+    def test_steps_create(self):
+        ''' Checks that the steps attribute is created.
+        '''
+        
+        self.assertEqual(self.World3.steps, 0)
+        
+        
+    def test_steps_increment(self):
+        ''' Check that after a set number of steps that the steps
+            attribute of the world increments.
+        '''
+        self.assertEqual(self.World3.steps,0)
+        self.World3.turn()
+        self.assertEqual(self.World3.steps,1)
+        self.assertNotEqual(self.World3.steps,-1)
 
 class TestAnt(unittest.TestCase):
     '''
@@ -541,16 +567,16 @@ class TestAnt(unittest.TestCase):
         ''' Tests that the possible moves for an ant with food are 
             correctly weighted given that the hive is next to the ant.
         '''
-        ant = antSearch.ant(self.world) 
+        ant = antSearch.ant(self.world)
         ant.location = (10,9)
+        ant.haveFood = True
         
         possible_moves = self.world.findNeighbours(ant.location)
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.hiveLocation)
         possible_moves.sort()
         ant.turn()
-        print("ant moves", ant.__moves__)
-        print("possible moves ", possible_moves)
+        
         self.assertEqual(ant.__moves__, possible_moves)
         self.assertEqual(ant.location in possible_moves, True)
     
