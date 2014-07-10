@@ -45,20 +45,8 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        try:
-            pheremones1 = self.world.point((1,0)).pheremones
-        except AttributeError:
-            pheremones1 = 0
-			
-        print("Pheremones at (1,0)", pheremones1)
-        
-        try:
-            pheremones2 = self.world.point((0,1)).pheremones
-        except AttributeError:
-            pheremones2 = 0
-        print("Pheremones at (0,1)", pheremones2)
-        
-        check = (pheremones1 == 1) or (pheremones2 == 1)
+        check = False # Add in general check for pheremones. Location
+                      # will not be known.
 
         self.assertTrue(check)
 
@@ -440,7 +428,6 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(ant.world, self.world)
         self.assertEqual(ant.haveFood, False)
         self.assertEqual(ant.location, self.world.hiveLocation)
-        self.assertEqual(ant.objective, 'food')
 
     def test_leave_pheremone(self):
         '''
@@ -449,7 +436,6 @@ class TestAnt(unittest.TestCase):
         original_location = (50,50)
         ant.location = original_location
         ant.haveFood = True
-        ant.objective = "hive"
 
         self.assertEqual(self.world.point(ant.location), None)
 
@@ -504,12 +490,10 @@ class TestAnt(unittest.TestCase):
         ant.location = self.world.foodLocation 
      
         self.assertEqual(ant.location, self.world.foodLocation)
-        self.assertEqual(ant.objective, 'food')
         self.assertEqual(ant.haveFood, False)
 
         ant.turn() # make ant take food
 
-        self.assertEqual(ant.objective, 'hive')
         self.assertEqual(ant.haveFood, True)
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1)
 
@@ -554,17 +538,19 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(ant.location in possible_moves, True)
     
     def test_turn_hive_with_food(self):
-        '''
+        ''' Tests that the possible moves for an ant with food are 
+            correctly weighted given that the hive is next to the ant.
         '''
         ant = antSearch.ant(self.world) 
         ant.location = (10,9)
-        ant.objective = "hive"
-
+        
         possible_moves = self.world.findNeighbours(ant.location)
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.hiveLocation)
         possible_moves.sort()
         ant.turn()
+        print("ant moves", ant.__moves__)
+        print("possible moves ", possible_moves)
         self.assertEqual(ant.__moves__, possible_moves)
         self.assertEqual(ant.location in possible_moves, True)
     

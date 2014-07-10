@@ -134,7 +134,7 @@ class ant(object):
 
         self.__moves__.sort()
         self.lastPoint = self.location
-        self.location = choice(self.neighbours)
+        self.location = choice(self.__moves__)
 
 class world(object):
     ''' World contains the hive, the pheremones, and the food.
