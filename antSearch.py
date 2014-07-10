@@ -96,7 +96,7 @@ class ant(object):
             
             Chooses a random point from that weighted list.
         '''
-        self.moves = []
+        self.__moves__ = []
         self.neighbours = self.world.findNeighbours(self.location) 
         
         if self.lastPoint in self.neighbours:

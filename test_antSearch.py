@@ -527,20 +527,17 @@ class TestAnt(unittest.TestCase):
         ant.location = self.world.foodLocation 
      
         self.assertEqual(ant.location, self.world.foodLocation)
-        self.assertEqual(ant.objective, 'food')
         self.assertEqual(ant.haveFood, False)
 
         ant.turn() # make ant take food
 
-        self.assertEqual(ant.objective, 'hive')
         self.assertEqual(ant.haveFood, True)
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1) 
 
         ant.location = self.world.hiveLocation 
         
         ant.turn() # make and drop off food
-
-        self.assertEqual(ant.objective, 'food')
+        
         self.assertEqual(ant.haveFood, False)
         self.assertEqual(self.world.hive().food,1) 
     
