@@ -63,20 +63,16 @@ class ant(object):
         Controls what an ant does each turn.
         
         An Ants turn behaviour:
-            check objective
-            if food, check to see on food point
-            if objective hive then check to see if on hive 
+            if ant has no food, check to see on food point
             
-            if objective food the look for pheremones or food
+            if ant has food then check to see if on hive 
+            
+            if ant has no food then look for pheremones or food
             move (priority food, pheremones, then empty)
-
-            if objective hive then look for hive
             
-            if not found hive deposit pheremone 
+            if ant has food but not on food point then deposit pheremone 
             move (pheremones first priority, then empty)
         '''
-        
-        print("Objective", self.objective)
         
         if self.haveFood == False and type(self.world.point(self.location)) == food:
             print("Got food!")
@@ -106,7 +102,7 @@ class ant(object):
         if self.lastPoint in self.neighbours:
             self.neighbours.remove(self.lastPoint)
         
-        if self.objective == 'food':
+        if self.haveFood == False:
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
@@ -121,7 +117,7 @@ class ant(object):
                     for i in range(multiple):
                         self.__moves__.append(coord)
 
-        if self.objective == 'hive':
+        if self.haveFood == True:
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
