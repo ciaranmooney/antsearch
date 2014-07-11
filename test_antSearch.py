@@ -68,18 +68,66 @@ class TestPoint(unittest.TestCase):
         self.assertNotEqual(self.p.pheremones, -1)
         
     def test_addPheremones(self):
-        ''' Tests new point has no pheremones, the has pheremones when
-            point pheremoneAdd method is called.
+        ''' Tests new point has no pheremones, the has pheremones and step when
+            point.pheremoneAdd(step) is called.
             
-            Add check for simulation step time too.
+            Checks that a new phermeone with a new step value is added if a
+            different step value is given.
         '''
+                
+        self.assertEqual(self.p.totalPheremones(), 0)
         
-        self.assertTrue(False)
+        self.p.pheremoneAdd(1)  # one step
         
+        self.assertEqual(self.p.pheremones, {1:1})
+        
+        self.p.pheremoneAdd(2) # two steps
+        
+        self.assertEqual(self.p.pheremones, {1:1,2:1})
+        
+        
+    def test_totalPheremones(self):
+        ''' Checks that the totalPheremones method of point is working properly.
+        
+            Checks that a two pheremoneAdds on the same step increase total, and
+            another pheremoneAdd on another step increases total.
+            
+        '''
+        self.assertEqual(self.p.totalPheremones(), 0)
+        
+        self.p.pheremoneAdd(1)  # pheremone at step one
+        
+        self.assertEqual(self.p.totalPheremones(), 1)
+        self.assertNotEqual(self.p.totalPheremones(), 2)
+        self.assertNotEqual(self.p.totalPheremones(), 0)
+        self.assertNotEqual(self.p.totalPheremones(), -1)
+
+        self.p.pheremoneAdd(1) # Another pheremone at step one
+        
+        self.assertEqual(self.p.totalPheremones(), 2)
+        self.assertNotEqual(self.p.totalPheremones(), 3)
+        self.assertNotEqual(self.p.totalPheremones(), 1)
+        self.assertNotEqual(self.p.totalPheremones(), -1)
+        
+        self.p.pheremoneAdd(2) # pheremone at step two
+        
+        self.assertEqual(self.p.totalPheremones(), 3)
+        self.assertNotEqual(self.p.totalPheremones(), 4)
+        self.assertNotEqual(self.p.totalPheremones(), 2)
+        self.assertNotEqual(self.p.totalPheremones(), -1)
+        self.assertNotEqual(self.p.totalPheremones(), 0)
+        
+        
+    def test_multiple_addPheremones(self):
+        ''' Tests for when multiple ants add pheremones in the the same turn.
+            This will mean the corresponding tuple in point.pheremones will have
+            mutliple pheremones for a step.
+        '''
         self.assertEqual(self.p.pheremones, 0)
-        self.p.pheremoneAdd()    
-        self.assertEqual(self.p.pheremones, 1)
-        self.assertNotEqual(self.p.pheremones, 2)
+        self.p.pheremoneAdd(1)  # first pheremone added in step 1
+        self.p.pheremoneAdd(1)  # second pheremone added in step 1
+        
+        self.assertEqual(self.pheremones, [(2,1)])
         
     def test_pheremoneDecay(self):
         ''' Tests when a point is created it has no pheremones. 
