@@ -8,6 +8,8 @@ class Simulation(unittest.TestCase):
     '''
 
     def setUp(self):
+        '''
+        '''
         pass
 
     def test_simulation(self):
@@ -17,14 +19,14 @@ class Simulation(unittest.TestCase):
             Run Simulation.
 
             Check to see that food in hive is 1
-            check to see food point is empty.
-            check that one of the other diagonal points contains pheremones.
-            Should only have 1 pheremone in that point
+            Check to see food point is empty.
+            Check world has pheremones.
 
         '''
         fLoc = (2,2)
         hLoc = (0,0)
-        self.world = antSearch.world(3, fLoc, hLoc)
+        decayRate = 0
+        self.world = antSearch.world(3, fLoc, hLoc, decayRate)
         self.ants = []
         self.ants.append(antSearch.ant(self.world))
        
@@ -45,34 +47,60 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        check = False # Add in general check for pheremones. Location
-                      # will not be known.
-
-        self.assertTrue(check)
+        print(self.world.pheremones)
+        self.assertTrue(len(self.world.pheremones) > 0)
 
 class TestPoint(unittest.TestCase):
     ''' Tests for the Point Class
     ''' 
 
     def setUp(self):
+        ''' Creates new point for each test.
         '''
-        '''
+        
         self.p = antSearch.point()
-
-    def test_create(self):
-        '''
-        '''
-        self.p.pheremones = 0
        
     def test_pheremones(self):   
+        ''' Tests that when a point is created that it has no 
+            pheremones.
         '''
+        self.assertEqual(self.p.pheremones, 0)
+        self.assertNotEqual(self.p.pheremones, -1)
+        
+    def test_addPheremones(self):
+        ''' Tests new point has no pheremones, the has pheremones when
+            point pheremoneAdd method is called.
+            
+            Add check for simulation step time too.
         '''
+        
+        self.assertTrue(False)
+        
+        self.assertEqual(self.p.pheremones, 0)
+        self.p.pheremoneAdd()    
+        self.assertEqual(self.p.pheremones, 1)
+        self.assertNotEqual(self.p.pheremones, 2)
+        
+    def test_pheremoneDecay(self):
+        ''' Tests when a point is created it has no pheremones. 
+            Then adds pheremones and check sit decays to zero but not
+            below.            
+        '''
+        
+        self.assertEqual(self.p.pheremones, 0)
         self.p.pheremoneAdd()    
         self.assertEqual(self.p.pheremones, 1)
         self.p.pheremoneDecay()
         self.assertEqual(self.p.pheremones, 0)
         self.p.pheremoneDecay()
         self.assertEqual(self.p.pheremones, 0)
+        self.assertNotEqual(self.p.pheremones, -1)
+        
+    def test_pheremoneDecay_rate_different(self):
+        ''' Tests that different pheremones on the same point will decay
+            at different times depending on when they were added.
+        '''
+        self.assertTrue(False)
 
 class TestFood(unittest.TestCase):
     ''' Tests for food class.
@@ -380,10 +408,17 @@ class TestWorld(unittest.TestCase):
         for i in coords:
             self.assertEqual(self.World3.point(i).pheremones, 0)
         
-    def test_pheremonDecay_rate(self):
+    def test_pheremoneDecay_rate(self):
         ''' Checks that the pheremone decay of a world happens at the 
             rate specific (ie per number of turns)
         '''
+        
+        # Each pheremone has a slightly different decay time as it will
+        # depend on when it is depositied.
+        
+        check = False
+        self.assertTrue(check)
+        
         coords = [(2,10),(10,2),(5,30),(55,21),(59,60),(82,15)]
 
         for i in coords:
@@ -403,11 +438,35 @@ class TestWorld(unittest.TestCase):
         for i in coords:
             self.assertEqual(self.World3.point(i).pheremones, 0)
             
+    def test_pheremoneDecay_rate_different(self):
+        ''' Creates pheremone at different steps of the simulation and
+            checks that they decay away at the expected time.
+            
+        
+            ie, for decay rate of 2 steps, with two pheremones added one
+                after the other:
+                
+               step 1, pheremone 0
+               step 2, pheremone 1
+               step 3, pheremone 2
+               step 4, pheremone 1
+               step 5, pheremone 0
+        '''
+        
+        self.assertTrue(False)
+            
+    def test_pheremonDecay_zero(self):
+        ''' Checks that if pheremone decay rate is set to zero that 
+            the world doesn't fall over.            
+        '''
+        
+        self.assertTrue(False)
 
     def test_pheremone_list(self):
         ''' Test that when pheremone reaches 0 that it is removed from
             the pheremone list.
         '''
+        
         self.World3.addPheremone((1,1))
 
         self.assertEqual(self.World3.point((1,1)).pheremones, 1)
@@ -423,6 +482,8 @@ class TestWorld(unittest.TestCase):
         ''' Checks that the steps attribute is created.
         '''
         
+        self.assertFalse(self.World3.steps, -1)
+        self.assertFalse(self.World3.steps, 1)
         self.assertEqual(self.World3.steps, 0)
         
         

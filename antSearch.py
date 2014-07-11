@@ -8,6 +8,8 @@
 # [] Write tests for point class
 # [] Write food class - unnecessary
 # [] Write PyGame visuatilsation
+# [] Make pheremones decay "independantly" depending on when they were
+#    deposited.
 
 import random
 from random import choice
@@ -292,7 +294,6 @@ class world(object):
             
     def pheremonesLeft(self, point):
         ''' Checks point to see if pheremones > 0
-        
         '''
         
         return self.point(point).pheremones != 0
@@ -302,24 +303,28 @@ class world(object):
 			Tidies up self.pheremones to only include points with
 			pheremones > 0
         '''
-        for point in self.pheremones:
-            self.removePheremone(point)
         
-        self.pheremones = filter(self.pheremonesLeft, self.pheremones)
-        self.pheremones = list(self.pheremones)
+        if self.pheremoneDecayRate == 0:
+            pass
+        elif self.pheremoneDecayRate < 0:
+            raise ZeroError
+        else:
+            for point in self.pheremones:
+                self.removePheremone(point)
+            
+            self.pheremones = filter(self.pheremonesLeft, self.pheremones)
+            self.pheremones = list(self.pheremones)
 
     def turn(self):
         '''
         '''
+        
         if self.food().foodLeft == 0 and self.hive().food == self.totalFood:
             self.finished = True
-            
-        if self.steps % self.pheremoneDecayRate:
-            self.pheremoneDecay()
+        
+        self.pheremoneDecay()
             
         self.steps += 1
-        
-        
 
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
