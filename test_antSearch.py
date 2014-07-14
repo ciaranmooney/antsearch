@@ -12,7 +12,24 @@ class Simulation(unittest.TestCase):
         '''
         pass
 
-    def test_simulation(self):
+    def test_simulation_1x2(self):
+        ''' 1D array with 2 spaces. Hive in one, food in other. An ant should
+            move food from food point to hive point.
+            
+            No phermeones should be deposited.
+        '''
+        
+        self.assertTrue(false)
+        
+    def test_simulation_1x3(self):
+        ''' 1D array with 3 spaces. Have in far left, food far right. An ant
+            should move the food from the food to the hive depositing one
+            pheremone in the middle.
+        '''
+        
+        self.assertTrue(false)
+
+    def test_simulation_3x3(self):
         ''' Create a 3x3 grid with food and hive in opposite corners. 
             Have one ant.
 
