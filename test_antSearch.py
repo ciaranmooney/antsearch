@@ -161,10 +161,28 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.totalPheremones(), 0)
         self.assertNotEqual(self.p.totalPheremones(), -1)
         
-    def test_pheremoneDecay_rate_different(self):
-        ''' Tests that different pheremones on the same point will decay
-            at different times depending on when they were added.
+    def test_pheremoneDecay_oldest_first(self):
+        ''' Tests that different pheremones on the same point will decay at 
+            different times depending on which step they were added.
+            
+            Should decay from oldest to newest.
         '''
+        
+        self.assertEqual(self.p.totalPheremones(), 0)
+        self.p.pheremoneAdd(1)  # step 1
+        self.assertEqual(self.p.pheremones, {1:1})
+        self.p.pheremoneAdd(1)  # step 1
+        self.assertEqual(self.p.pheremones, {1:2})
+        self.p.pheremoneAdd(2)  # step 2
+        self.assertEqual(self.p.pheremones, {1:2, 2:1})
+        self.p.pheremoneDecay()
+        self.assertEqual(self.p.pheremones, {1:1, 2:1})
+        self.p.pheremoneDecay()
+        self.assertEqual(self.p.pheremones, {2:1})
+        self.p.pheremoneDecay()
+        self.assertEqual(self.p.pheremones, {})
+        self.assertEqual(self.p.totalPheremones(), 0)
+        
         self.assertTrue(False)
 
 class TestFood(unittest.TestCase):
@@ -449,7 +467,7 @@ class TestWorld(unittest.TestCase):
         '''
         self.assertTrue(False)
 
-    def test_pheremoneDecay(self):
+    def test_world_pheremoneDecay(self):
         ''' Tests that pheremoneDecay method reduces a number of 
             different points pheremone count by one. Also checks that
             pheremonedecay method does not go below zero.
@@ -480,9 +498,8 @@ class TestWorld(unittest.TestCase):
         
         # Each pheremone has a slightly different decay time as it will
         # depend on when it is depositied.
-        
-        check = False
-        self.assertTrue(check)
+
+        self.assertTrue(False)
         
         coords = [(2,10),(10,2),(5,30),(55,21),(59,60),(82,15)]
 

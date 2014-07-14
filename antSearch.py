@@ -337,16 +337,22 @@ class point(object):
     
     def pheremoneDecay(self):
         ''' Goes through each of the steps in the self.pheremones dict and
-            removes one from the total.
+            removes one from the oldest.
             
             If total reaches zero then key is removed.
         '''
         for key in self.pheremones:
             self.pheremones[key] = self.pheremones[key]-1
-            
-        for key in self.pheremones:
+        
+        pheremoneKeys = self.pheremones.keys()
+        emptyPheremoneKeys = []
+        
+        for key in pheremoneKeys:
             if self.pheremones[key] == 0:
-                self.pheremones.pop(key)
+                emptyPheremoneKeys.append(key)
+        
+        for key in emptyPheremoneKeys:
+            self.pheremones.pop(key)
         
     def pheremoneAdd(self, step):
         ''' Adds another tuple to self.pheremones which contains the total
