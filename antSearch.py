@@ -116,7 +116,7 @@ class ant(object):
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
-                    for i in range(p.pheremones+1):
+                    for i in range(p.totalPheremones()+1):
                         self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
@@ -131,7 +131,7 @@ class ant(object):
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
-                    for i in range(p.pheremones+1):
+                    for i in range(p.totalPheremones()+1):
                         self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
@@ -267,7 +267,7 @@ class world(object):
         if self.point(coords) == None:
             #print("No point at", coords)
             self.world[x][y] = point()
-            self.world[x][y].pheremoneAdd()
+            self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 #print(self.pheremones)
                 self.pheremones.append(coords)
@@ -343,6 +343,8 @@ class point(object):
         '''
         for key in self.pheremones:
             self.pheremones[key] = self.pheremones[key]-1
+            
+        for key in self.pheremones:
             if self.pheremones[key] == 0:
                 self.pheremones.pop(key)
         

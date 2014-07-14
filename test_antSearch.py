@@ -77,12 +77,13 @@ class TestPoint(unittest.TestCase):
         
         self.p = antSearch.point()
        
-    def test_pheremones(self):   
+    def test_new_pheremone_zero(self):   
         ''' Tests that when a point is created that it has no 
             pheremones.
         '''
-        self.assertEqual(self.p.pheremones, 0)
-        self.assertNotEqual(self.p.pheremones, -1)
+        self.assertEqual(self.p.totalPheremones(), 0)
+        self.assertNotEqual(self.p.totalPheremones(), -1)
+        self.assertNotEqual(self.p.totalPheremones(), 1)
         
     def test_addPheremones(self):
         ''' Tests new point has no pheremones, the has pheremones and step when
@@ -140,26 +141,25 @@ class TestPoint(unittest.TestCase):
             This will mean the corresponding tuple in point.pheremones will have
             mutliple pheremones for a step.
         '''
-        self.assertEqual(self.p.pheremones, 0)
+        self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(1)  # first pheremone added in step 1
         self.p.pheremoneAdd(1)  # second pheremone added in step 1
         
-        self.assertEqual(self.pheremones, [(2,1)])
+        self.assertEqual(self.p.pheremones, {1:2})
         
     def test_pheremoneDecay(self):
         ''' Tests when a point is created it has no pheremones. 
-            Then adds pheremones and check sit decays to zero but not
-            below.            
+            Then adds pheremones and checks it decays to zero but not below.            
         '''
         
-        self.assertEqual(self.p.pheremones, 0)
-        self.p.pheremoneAdd()    
-        self.assertEqual(self.p.pheremones, 1)
+        self.assertEqual(self.p.totalPheremones(), 0)
+        self.p.pheremoneAdd(1)  # step 1
+        self.assertEqual(self.p.totalPheremones(), 1)
         self.p.pheremoneDecay()
-        self.assertEqual(self.p.pheremones, 0)
+        self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneDecay()
-        self.assertEqual(self.p.pheremones, 0)
-        self.assertNotEqual(self.p.pheremones, -1)
+        self.assertEqual(self.p.totalPheremones(), 0)
+        self.assertNotEqual(self.p.totalPheremones(), -1)
         
     def test_pheremoneDecay_rate_different(self):
         ''' Tests that different pheremones on the same point will decay
@@ -593,7 +593,7 @@ class TestAnt(unittest.TestCase):
 
         ant.turn()
 
-        self.assertEqual(self.world.point(original_location).pheremones, 1)
+        self.assertEqual(self.world.point(original_location).totalPheremones(), 1)
         
     def test_turn(self):
         '''
