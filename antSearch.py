@@ -275,7 +275,7 @@ class world(object):
 			    
         elif type(self.point(coords)) == point:
             #print("Point at", coords)
-            self.world[x][y].pheremoneAdd()
+            self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
             #print(self.pheremones)
@@ -298,7 +298,7 @@ class world(object):
         ''' Checks point to see if pheremones > 0
         '''
         
-        return self.point(point).pheremones != 0
+        return self.point(point).totalPheremones() != 0
         
     def pheremoneDecay(self):
         ''' Decreases the pheremone count by one.
@@ -341,8 +341,13 @@ class point(object):
             
             If total reaches zero then key is removed.
         '''
-        for key in self.pheremones:
-            self.pheremones[key] = self.pheremones[key]-1
+        
+        if len(self.pheremones) == 0:
+            pass # no pheremones
+        else:
+            self.pheremones[list(self.pheremones)[0]] -= 1   # Subtract 1 from
+                                                             # oldest in item in 
+                                                             # dict
         
         pheremoneKeys = self.pheremones.keys()
         emptyPheremoneKeys = []
