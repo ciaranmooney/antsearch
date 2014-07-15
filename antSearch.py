@@ -10,6 +10,8 @@
 # [] Write PyGame visuatilsation
 # [] Make pheremones decay "independantly" depending on when they were
 #    deposited.
+# [] Write style guide. One line between ''' ''' and code, two lines between
+#    different functions
 
 import random
 from random import choice
@@ -114,7 +116,7 @@ class ant(object):
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
-                    for i in range(p.pheremones+1):
+                    for i in range(p.totalPheremones()+1):
                         self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
@@ -129,7 +131,7 @@ class ant(object):
             for coord in self.neighbours:
                 p = self.world.point(coord)
                 if hasattr(p, 'pheremones'):
-                    for i in range(p.pheremones+1):
+                    for i in range(p.totalPheremones()+1):
                         self.__moves__.append(coord)
                 else:
                     self.__moves__.append(coord)
@@ -222,11 +224,11 @@ class world(object):
         return self.world[x][y]
 
     def findNeighbours(self, coords):
-        ''' Finds coordinates of points around the given point. In ideal case
-            you get 8 valid points. Corner and side cases are treated too.
+        ''' Finds coordinates of all adjacent points around the given point. 
+            In ideal case you get 8 valid points (3x3 grid with hole in the 
+            middle.) Corner and side cases are treated too.
             
-            You do not get your original coordinate back. 3x3 grid with hole
-            in the middle.
+            You do not get your original coordinate back. 
 
             If these contain coordinates contain other obstacles this is for
             the ant to find out.
@@ -265,7 +267,7 @@ class world(object):
         if self.point(coords) == None:
             #print("No point at", coords)
             self.world[x][y] = point()
-            self.world[x][y].pheremoneAdd()
+            self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 #print(self.pheremones)
                 self.pheremones.append(coords)
@@ -273,7 +275,7 @@ class world(object):
 			    
         elif type(self.point(coords)) == point:
             #print("Point at", coords)
-            self.world[x][y].pheremoneAdd()
+            self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
             #print(self.pheremones)
@@ -296,7 +298,7 @@ class world(object):
         ''' Checks point to see if pheremones > 0
         '''
         
-        return self.point(point).pheremones != 0
+        return self.point(point).totalPheremones() != 0
         
     def pheremoneDecay(self):
         ''' Decreases the pheremone count by one.
@@ -331,16 +333,53 @@ class point(object):
         or food, or hive.
     '''
     def __init__(self):
-        self.pheremones  = 0
+        self.pheremones  = {} # key = step, entry = total Pheremones for step
     
     def pheremoneDecay(self):
-        if self.pheremones == 0:
+        ''' Goes through each of the steps in the self.pheremones dict and
+            removes one from the oldest.
+            
+            If total reaches zero then key is removed.
+        '''
+        
+        if len(self.pheremones) == 0:
+            pass # no pheremones
+        else:
+            self.pheremones[list(self.pheremones)[0]] -= 1   # Subtract 1 from
+                                                             # oldest in item in 
+                                                             # dict
+        
+        pheremoneKeys = self.pheremones.keys()
+        emptyPheremoneKeys = []
+        
+        for key in pheremoneKeys:
+            if self.pheremones[key] == 0:
+                emptyPheremoneKeys.append(key)
+        
+        for key in emptyPheremoneKeys:
+            self.pheremones.pop(key)
+        
+    def pheremoneAdd(self, step):
+        ''' Adds another tuple to self.pheremones which contains the total
+            pheremones added for each step.
+        '''
+        if step not in self.pheremones.keys():
+            self.pheremones[step] = 0
+            
+        self.pheremones[step] = self.pheremones[step]+1
+        
+    def totalPheremones(self):
+        ''' Inspects self.pheremone and gives an up-to-date total.
+        '''
+        runningTotal = 0
+        
+        if not self.pheremones: # checks if self.pheremones is empty
             pass
-        else:	
-            self.pheremones -= 1
-    
-    def pheremoneAdd(self):
-        self.pheremones += 1
+        else:
+            for key in self.pheremones:
+                runningTotal += self.pheremones[key]
+        
+        return runningTotal
 
 class hive(object):
     ''' Hive object, keeps track of how much food is collected. So that we can
