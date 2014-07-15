@@ -183,7 +183,6 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.pheremones, {})
         self.assertEqual(self.p.totalPheremones(), 0)
         
-        self.assertTrue(False)
 
 class TestFood(unittest.TestCase):
     ''' Tests for food class.
@@ -413,9 +412,9 @@ class TestWorld(unittest.TestCase):
         point = (49,49)
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
-        self.assertEqual(self.World3.point(point).pheremones, 1)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
         self.World3.addPheremone(point)
-        self.assertEqual(self.World3.point(point).pheremones, 2)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 2)
         
         self.assertEqual(self.World3.pheremones, [point])
     
@@ -444,9 +443,9 @@ class TestWorld(unittest.TestCase):
         point = (50,50)
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
-        self.assertEqual(self.World3.point(point).pheremones, 1)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
         self.World3.removePheremone(point)
-        self.assertEqual(self.World3.point(point).pheremones, 0)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 0)
 
     def test_turn_world_finished(self):
         '''
@@ -479,17 +478,17 @@ class TestWorld(unittest.TestCase):
             self.World3.addPheremone(i)
 
         for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 1)
+            self.assertEqual(self.World3.point(i).totalPheremones(), 1)
 
         self.World3.pheremoneDecay()
 
         for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 0)
+            self.assertEqual(self.World3.point(i).totalPheremones(), 0)
             
         self.World3.pheremoneDecay()
 
         for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 0)
+            self.assertEqual(self.World3.point(i).totalPheremones(), 0)
         
     def test_pheremoneDecay_rate(self):
         ''' Checks that the pheremone decay of a world happens at the 
@@ -551,14 +550,14 @@ class TestWorld(unittest.TestCase):
         
         self.World3.addPheremone((1,1))
 
-        self.assertEqual(self.World3.point((1,1)).pheremones, 1)
+        self.assertEqual(self.World3.point((1,1)).totalPheremones(), 1)
 
         self.World3.pheremoneDecay()
         
-        self.assertEqual(self.World3.point((1,1)).pheremones, 0)
+        self.assertEqual(self.World3.point((1,1)).totalPheremones(), 0)
+        print(self.World3.pheremones)
         self.assertTrue((1,1) not in self.World3.pheremones)
-
-        self.assertTrue(False)
+        
         
     def test_steps_create(self):
         ''' Checks that the steps attribute is created.
@@ -671,7 +670,7 @@ class TestAnt(unittest.TestCase):
         self.assertNotEqual(ant.location, self.world.foodLocation)
         ant.turn()
 
-        self.assertEqual(self.world.point(new_location).pheremones, 1)
+        self.assertEqual(self.world.point(new_location).totalPheremones(), 1)
 
     def test_drop_off_food(self):
         '''
