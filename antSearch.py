@@ -12,6 +12,10 @@
 #    deposited.
 # [] Write style guide. One line between ''' ''' and code, two lines between
 #    different functions
+# [] There should be pre-step, step, post-step functions for points, ants and 
+#    the world.
+# [] Document counting from zero.
+# [] Re-write fragile tests.
 
 import random
 from random import choice
@@ -332,52 +336,39 @@ class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
         or food, or hive.
     '''
-    def __init__(self):
-        self.pheremones  = {} # key = step, entry = total Pheremones for step
-    
-    def pheremoneDecay(self):
-        ''' Goes through each of the steps in the self.pheremones dict and
-            removes one from the oldest.
-            
-            If total reaches zero then key is removed.
+    def __init__(self, decay):
+        ''' Creates an empty list for the pheremones whose size is equal to the
+            number of steps required for decaying.
+        '''
+
+        self.pheremones  = []
+        for i in range(decay):
+            self.pheremones.append(0)
+        
+
+    def pheremoneDecay(self, step):
+        ''' Sets a value of self.pheremones to zero to indicate decay of the
+            pheremone trail.
         '''
         
-        if len(self.pheremones) == 0:
-            pass # no pheremones
-        else:
-            self.pheremones[list(self.pheremones)[0]] -= 1   # Subtract 1 from
-                                                             # oldest in item in 
-                                                             # dict
+        self.pheremones[step % len(self.pheremones)] = 0
         
-        pheremoneKeys = self.pheremones.keys()
-        emptyPheremoneKeys = []
-        
-        for key in pheremoneKeys:
-            if self.pheremones[key] == 0:
-                emptyPheremoneKeys.append(key)
-        
-        for key in emptyPheremoneKeys:
-            self.pheremones.pop(key)
         
     def pheremoneAdd(self, step):
-        ''' Adds another tuple to self.pheremones which contains the total
+        ''' Increments an entry in self.pheremones which contains the total
             pheremones added for each step.
         '''
-        if step not in self.pheremones.keys():
-            self.pheremones[step] = 0
-            
-        self.pheremones[step] = self.pheremones[step]+1
+        
+        self.pheremones[step % len(self.pheremones)] += 1
+        
         
     def totalPheremones(self):
         ''' Inspects self.pheremone and gives an up-to-date total.
         '''
         runningTotal = 0
         
-        if not self.pheremones: # checks if self.pheremones is empty
-            pass
-        else:
-            for key in self.pheremones:
-                runningTotal += self.pheremones[key]
+        for i in self.pheremones:
+            runningTotal = runningTotal + i
         
         return runningTotal
 

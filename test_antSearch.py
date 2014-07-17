@@ -49,6 +49,7 @@ class Simulation(unittest.TestCase):
 
         print(self.world.pheremones)
         self.assertTrue(len(self.world.pheremones) > 0)
+        
 
 class TestPoint(unittest.TestCase):
     ''' Tests for the Point Class
@@ -94,14 +95,10 @@ class TestPoint(unittest.TestCase):
             Nb. Fragile test. Depends on self.decay remaining equal to 10
         '''
                 
-        self.assertEqual(self.p.totalPheremones(), 0)
-        
-        self.p.pheremoneAdd(1)  # step two
-        
+        self.assertEqual(self.p.totalPheremones(), 0)        
+        self.p.pheremoneAdd(0)  # step one        
         self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
-       
-        self.p.pheremoneAdd(2) # step two
-        
+        self.p.pheremoneAdd(1) # step two
         self.assertEqual(self.p.pheremones, [1,1,0,0,0,0,0,0,0,0])
         
         
@@ -110,26 +107,25 @@ class TestPoint(unittest.TestCase):
         
             Checks that a two pheremoneAdds on the same step increase total, and
             another pheremoneAdd on another step increases total.
-            
         '''
         
         self.assertEqual(self.p.totalPheremones(), 0)
         
-        self.p.pheremoneAdd(1)  # pheremone at step one
+        self.p.pheremoneAdd(0)  # pheremone at step one
         
         self.assertEqual(self.p.totalPheremones(), 1)
         self.assertNotEqual(self.p.totalPheremones(), 2)
         self.assertNotEqual(self.p.totalPheremones(), 0)
         self.assertNotEqual(self.p.totalPheremones(), -1)
 
-        self.p.pheremoneAdd(1) # Another pheremone at step one
+        self.p.pheremoneAdd(0) # Another pheremone at step one
         
         self.assertEqual(self.p.totalPheremones(), 2)
         self.assertNotEqual(self.p.totalPheremones(), 3)
         self.assertNotEqual(self.p.totalPheremones(), 1)
         self.assertNotEqual(self.p.totalPheremones(), -1)
         
-        self.p.pheremoneAdd(2) # pheremone at step two
+        self.p.pheremoneAdd(1) # pheremone at step two
         
         self.assertEqual(self.p.totalPheremones(), 3)
         self.assertNotEqual(self.p.totalPheremones(), 4)
@@ -147,8 +143,8 @@ class TestPoint(unittest.TestCase):
         '''
         
         self.assertEqual(self.p.totalPheremones(), 0)
-        self.p.pheremoneAdd(1)  # first pheremone added in step 1
-        self.p.pheremoneAdd(1)  # second pheremone added in step 1
+        self.p.pheremoneAdd(0)  # first pheremone added in step 1
+        self.p.pheremoneAdd(0)  # second pheremone added in step 1
         
         self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
         
@@ -161,29 +157,32 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(1)  # step 1
         self.assertEqual(self.p.totalPheremones(), 1)
-        self.p.pheremoneDecay()
+        self.p.pheremoneDecay(1)
         self.assertEqual(self.p.totalPheremones(), 0)
-        self.p.pheremoneDecay()
+        self.p.pheremoneDecay(1)
         self.assertEqual(self.p.totalPheremones(), 0)
         self.assertNotEqual(self.p.totalPheremones(), -1)
+        
         
     def test_pheremoneDecay_oldest_first(self):
         ''' Tests that different pheremones on the same point will decay at 
             different times depending on which step they were added.
             
             Should decay from oldest to newest.
+            
+            Nb. Fragile test dependant on self.decay being equal to 10.
         '''
         
         self.assertEqual(self.p.totalPheremones(), 0)
-        self.p.pheremoneAdd(1)  # step 1
+        self.p.pheremoneAdd(0)  # step 1
         self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
-        self.p.pheremoneAdd(1)  # step 1
+        self.p.pheremoneAdd(0)  # step 1
         self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
-        self.p.pheremoneAdd(2)  # step 2
+        self.p.pheremoneAdd(1)  # step 2
         self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
-        self.p.pheremoneDecay()
+        self.p.pheremoneDecay(10) 
         self.assertEqual(self.p.pheremones, [0,1,0,0,0,0,0,0,0,0])
-        self.p.pheremoneDecay()
+        self.p.pheremoneDecay(11)
         self.assertEqual(self.p.pheremones, [0,0,0,0,0,0,0,0,0,0])
         self.assertEqual(self.p.totalPheremones(), 0)
         
