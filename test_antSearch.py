@@ -58,33 +58,51 @@ class TestPoint(unittest.TestCase):
         ''' Creates new point for each test.
         '''
         
-        self.p = antSearch.point()
-       
+        self.decay = 10
+        self.p = antSearch.point(self.decay)
+    
+    
+    def test_new_pheremone_list_empty(self):
+        ''' Tests that the pheremone list created in the point class is the
+            expected length and contains all zeros.
+        '''
+        
+        self.assertEqual(len(self.p.pheremones), self.decay)
+        
+        for i in self.p.pheremones:
+            self.assertEqual(i, 0)
+        
+        
     def test_new_pheremone_zero(self):   
         ''' Tests that when a point is created that it has no 
             pheremones.
         '''
+        
         self.assertEqual(self.p.totalPheremones(), 0)
         self.assertNotEqual(self.p.totalPheremones(), -1)
         self.assertNotEqual(self.p.totalPheremones(), 1)
         
+        
     def test_addPheremones(self):
-        ''' Tests new point has no pheremones, the has pheremones and step when
-            point.pheremoneAdd(step) is called.
+        ''' Tests new point has no pheremones. Then checks that the structure of
+            self.p.phereemones is correct after point.pheremoneAdd(step) is
+             called.
             
             Checks that a new phermeone with a new step value is added if a
             different step value is given.
+            
+            Nb. Fragile test. Depends on self.decay remaining equal to 10
         '''
                 
         self.assertEqual(self.p.totalPheremones(), 0)
         
-        self.p.pheremoneAdd(1)  # one step
+        self.p.pheremoneAdd(1)  # step two
         
-        self.assertEqual(self.p.pheremones, {1:1})
+        self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
+       
+        self.p.pheremoneAdd(2) # step two
         
-        self.p.pheremoneAdd(2) # two steps
-        
-        self.assertEqual(self.p.pheremones, {1:1,2:1})
+        self.assertEqual(self.p.pheremones, [1,1,0,0,0,0,0,0,0,0])
         
         
     def test_totalPheremones(self):
@@ -94,6 +112,7 @@ class TestPoint(unittest.TestCase):
             another pheremoneAdd on another step increases total.
             
         '''
+        
         self.assertEqual(self.p.totalPheremones(), 0)
         
         self.p.pheremoneAdd(1)  # pheremone at step one
@@ -123,12 +142,16 @@ class TestPoint(unittest.TestCase):
         ''' Tests for when multiple ants add pheremones in the the same turn.
             This will mean the corresponding tuple in point.pheremones will have
             mutliple pheremones for a step.
+            
+            Nb. Fragile test, depends on self.decay being equal to 10.
         '''
+        
         self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(1)  # first pheremone added in step 1
         self.p.pheremoneAdd(1)  # second pheremone added in step 1
         
-        self.assertEqual(self.p.pheremones, {1:2})
+        self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
+        
         
     def test_pheremoneDecay(self):
         ''' Tests when a point is created it has no pheremones. 
@@ -153,17 +176,15 @@ class TestPoint(unittest.TestCase):
         
         self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(1)  # step 1
-        self.assertEqual(self.p.pheremones, {1:1})
+        self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
         self.p.pheremoneAdd(1)  # step 1
-        self.assertEqual(self.p.pheremones, {1:2})
+        self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
         self.p.pheremoneAdd(2)  # step 2
-        self.assertEqual(self.p.pheremones, {1:2, 2:1})
+        self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
         self.p.pheremoneDecay()
-        self.assertEqual(self.p.pheremones, {1:1, 2:1})
+        self.assertEqual(self.p.pheremones, [0,1,0,0,0,0,0,0,0,0])
         self.p.pheremoneDecay()
-        self.assertEqual(self.p.pheremones, {2:1})
-        self.p.pheremoneDecay()
-        self.assertEqual(self.p.pheremones, {})
+        self.assertEqual(self.p.pheremones, [0,0,0,0,0,0,0,0,0,0])
         self.assertEqual(self.p.totalPheremones(), 0)
         
 
