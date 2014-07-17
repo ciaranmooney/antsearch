@@ -180,7 +180,7 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
         self.p.pheremoneAdd(1)  # step 2
         self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
-        self.p.pheremoneDecay(10) 
+        self.p.pheremoneDecay(10)
         self.assertEqual(self.p.pheremones, [0,1,0,0,0,0,0,0,0,0])
         self.p.pheremoneDecay(11)
         self.assertEqual(self.p.pheremones, [0,0,0,0,0,0,0,0,0,0])

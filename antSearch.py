@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 
 # TODO
-# [] Decay should be a rate, need a step counter of world.
+# [x] Decay should be a rate, need a step counter of world.
 # [] Re-read and comment all tests
 # [] Re-write tests to use the "setUP" function rather than creating new
 #    worlds each time.
-# [] Write tests for point class
 # [] Write food class - unnecessary
 # [] Write PyGame visuatilsation
-# [] Make pheremones decay "independantly" depending on when they were
+# [x] Make pheremones decay "independantly" depending on when they were
 #    deposited.
 # [] Write style guide. One line between ''' ''' and code, two lines between
 #    different functions
@@ -63,6 +62,7 @@ class ant(object):
         the other points.
     
     '''
+    
     def __init__(self, world):
         ''' Initialise ant with world that it is going to search.
         '''    
@@ -71,6 +71,7 @@ class ant(object):
         self.location = self.world.hiveLocation
         self.lastPoint = None
         self.__moves__ = []
+    
     
     def turn(self):
         '''
@@ -104,12 +105,14 @@ class ant(object):
         
         self.move()
 
+    
     def move(self):
         ''' Finds neighbours from world. Then checks to see what type of point
             each neighbour it and builds a weighted list.
             
             Chooses a random point from that weighted list.
         '''
+        
         self.__moves__ = []
         self.neighbours = self.world.findNeighbours(self.location) 
         
@@ -150,9 +153,11 @@ class ant(object):
         self.lastPoint = self.location
         self.location = choice(self.__moves__)
 
+
 class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
+    
     def __init__(self, size, food='random', hive='random', pheremoneDecay=10):
        
         self.world = []
@@ -184,33 +189,42 @@ class world(object):
 
         self.finished = False
 
+    
     def hive(self):
         ''' Convinience method to quickly get the hive object.
             Returns a hive object.
         '''
+    
         x, y = self.hiveLocation
         return self.world[x][y]
 
+    
     def food(self):
         ''' Convinience method to quickly get the food object.
             Returns a food object.
         '''
+    
         x, y = self.foodLocation
         return self.world[x][y]
 
+    
     def create_hive(self):
         ''' Puts a hive object at the location give. Loation is a tuple with
             (x,y) coords.
         '''
+    
         x, y = self.hiveLocation
         self.world[x][y] = hive()
+
 
     def create_food(self, amount=100):
         ''' Puts a food object at the location give. Loation is a tuple with
             (x,y) coords.
         '''
+
         x, y = self.foodLocation
         self.world[x][y] = food(amount)
+
 
     def show_world(self):
         ''' Shows world in a nice text format for printing to terminal with 
@@ -218,14 +232,18 @@ class world(object):
             not actually happen here and be added on later. Maybe replaced 
             with __str__()
         '''
+
         return self.world
+
 
     def point(self, coords):
         ''' Returns what is at the given coordinate in the world.
             Can either be None, food, hive or point.
         '''
+
         x, y = coords
         return self.world[x][y]
+
 
     def findNeighbours(self, coords):
         ''' Finds coordinates of all adjacent points around the given point. 
@@ -241,6 +259,7 @@ class world(object):
             coord. Then discards though that lie out of the boundary of the 
             world.
         '''
+
         x, y = coords
         n = []
         for i in range(-1,2):
@@ -253,11 +272,14 @@ class world(object):
         n.remove(coords)
         return n 
 
+
     def __checkCoords__(self, coords):
         ''' Check if point lies within the boundary of the world.
         '''
+
         x, y = coords
         return (0 <= x < len(self.world)) and (0 <= y < len(self.world))
+
         
     def addPheremone(self, coords):
         ''' Leaves a pheremone at the coordinates by incrementing the points
@@ -266,6 +288,7 @@ class world(object):
             If there is no point here, one is created and it's pheremone 
             counter incremented by one.
         '''
+
         x, y = coords
         #print(self.point(coords))
         if self.point(coords) == None:
@@ -284,6 +307,7 @@ class world(object):
                 self.pheremones.append(coords)
             #print(self.pheremones)
         
+
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
         
@@ -291,6 +315,7 @@ class world(object):
             to catch this error.
             
         '''
+
         x, y = coords
         p = self.point(coords)
         try:
@@ -298,11 +323,13 @@ class world(object):
         except:
             print("Error!") 
             
+
     def pheremonesLeft(self, point):
         ''' Checks point to see if pheremones > 0
         '''
         
         return self.point(point).totalPheremones() != 0
+
         
     def pheremoneDecay(self):
         ''' Decreases the pheremone count by one.
@@ -321,6 +348,7 @@ class world(object):
             self.pheremones = filter(self.pheremonesLeft, self.pheremones)
             self.pheremones = list(self.pheremones)
 
+
     def turn(self):
         '''
         '''
@@ -332,10 +360,12 @@ class world(object):
             
         self.steps += 1
 
+
 class point(object):
     ''' A point in the world. This keeps track of the pheremone trails.
         or food, or hive.
     '''
+
     def __init__(self, decay):
         ''' Creates an empty list for the pheremones whose size is equal to the
             number of steps required for decaying.
@@ -372,24 +402,42 @@ class point(object):
         
         return runningTotal
 
+
 class hive(object):
     ''' Hive object, keeps track of how much food is collected. So that we can
         figure out if we have reached the end of the simulation.
     '''
+
     def __init__(self,):
+        '''
+        '''
+        
         self.food = 0
 
+
     def addFood(self):
+        '''
+        '''
+        
         self.food += 1
+
 
 class food(object):
     ''' Food object. Keeps track of how much food is left. 
     '''
     def __init__(self, amount=100):
+        '''
+        '''
+        
         self.foodLeft = amount
 
+
     def removeFood(self):
+        '''
+        '''
+
         self.foodLeft -= 1
+
 
 if __name__ == '__main()__':
     pass
