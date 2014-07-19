@@ -294,7 +294,7 @@ class world(object):
         #print(self.point(coords))
         if self.point(coords) == None:
             #print("No point at", coords)
-            self.world[x][y] = point()
+            self.world[x][y] = point(self.pheremoneDecayRate)
             self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 #print(self.pheremones)
@@ -319,11 +319,8 @@ class world(object):
 
         x, y = coords
         p = self.point(coords)
-        try:
-            p.pheremoneDecay()
-        except:
-            print("Error!") 
-            
+        p.pheremoneDecay(self.steps)   
+
 
     def pheremonesLeft(self, point):
         ''' Checks point to see if pheremones > 0
