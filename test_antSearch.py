@@ -508,11 +508,7 @@ class TestWorld(unittest.TestCase):
         self.World3.addPheremone(p)
         self.assertEqual(self.World3.point(p).totalPheremones(), 1)
         
-        print("+"*20)
-        print(self.World3.point(p).pheremones)
-        print("+"*20)
-        
-        self.World3.turn()
+        self.World3.turn() # this breaks the tests as the world.pheremoneDecay() method is called here too
         self.assertEqual(self.World3.point(p).totalPheremones(), 1)
         
         self.assertTrue(False)
