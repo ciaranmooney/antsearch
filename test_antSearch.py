@@ -501,27 +501,19 @@ class TestWorld(unittest.TestCase):
         # Each pheremone has a slightly different decay time as it will
         # depend on when it is depositied.
 
+        p = (1,1)
+        self.World3.pheremoneDecayRate = 3
+        
+        self.assertEqual(self.World3.point(p), None)
+        self.World3.addPheremone(p)
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+        
+        self.World3.turn() # this breaks the tests as the world.pheremoneDecay() method is called here too
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+        
         self.assertTrue(False)
         
-        coords = [(2,10),(10,2),(5,30),(55,21),(59,60),(82,15)]
-
-        for i in coords:
-            self.World3.addPheremone(i)
         
-        for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 1)
-        
-        self.World3.turn()
-        
-        for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 1)
-            
-        while self.World3.steps < 10:
-            self.World3.turn()
-        
-        for i in coords:
-            self.assertEqual(self.World3.point(i).pheremones, 0)
-            
     def test_pheremoneDecay_rate_different(self):
         ''' Creates pheremone at different steps of the simulation and
             checks that they decay away at the expected time.
