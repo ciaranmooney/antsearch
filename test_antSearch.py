@@ -567,175 +567,205 @@ class TestWorld(unittest.TestCase):
         ''' Check that after a set number of steps that the steps
             attribute of the world increments.
         '''
+        
         self.assertEqual(self.World3.steps,0)
         self.World3.turn()
         self.assertEqual(self.World3.steps,1)
         self.assertNotEqual(self.World3.steps,-1)
 
+
 class TestAnt(unittest.TestCase):
     '''
     '''
 
+
     def setUp(self):
         '''
         '''
+        
         hiveLocation = (10,10)
         foodLocation = (99,2)
         self.world = antSearch.world(100, hive=hiveLocation, food=foodLocation)
+        self.ant = antSearch.ant(self.world) 
 
     def test_init(self):
         '''
         '''
-        ant = antSearch.ant(self.world)
+        
+        self.assertEqual(self.ant.world, self.world)
+        self.assertEqual(self.ant.haveFood, False)
+        self.assertEqual(self.ant.location, self.world.hiveLocation)
 
-        self.assertEqual(ant.world, self.world)
-        self.assertEqual(ant.haveFood, False)
-        self.assertEqual(ant.location, self.world.hiveLocation)
 
     def test_leave_pheremone(self):
         '''
         '''
-        ant = antSearch.ant(self.world)
+        
         original_location = (50,50)
-        ant.location = original_location
-        ant.haveFood = True
+        self.ant.location = original_location
+        self.ant.haveFood = True
 
-        self.assertEqual(self.world.point(ant.location), None)
-
-        ant.turn()
-
+        self.assertEqual(self.world.point(self.ant.location), None)
+        self.ant.turn()
         self.assertEqual(self.world.point(original_location).totalPheremones(), 1)
         
-    def test_turn(self):
-        '''
-        '''
-        ant = antSearch.ant(self.world) 
-        
-        self.assertEqual(ant.location, self.world.hiveLocation)
-        possible_moves = self.world.findNeighbours(ant.location) 
 
-        ant.turn()
-        self.assertEqual(ant.location in possible_moves, True)
+    def test_pre_turn(self):
+        ''' Searches world for negibourhing spots and decides to which point
+            the next move will be.
+            
+        '''
+        
+        self.assertTrue(False)
+    
+    
+    def test_turn(self):
+        ''' This test should check that the ant deposit pheremones at current 
+            point, picks up food, or drops off food.
+        '''
+        
+        self.assertEqual(self.ant.location, self.world.hiveLocation)
+        possible_moves = self.world.findNeighbours(self.ant.location) 
+
+        self.ant.turn()
+        self.assertEqual(self.ant.location in possible_moves, True)
+        
+        self.assertTrue(False)
+        
+        
+    def test_post_turn(self):
+        ''' Checks that an ant moves to the point that was chosen in pre_turn.
+        '''
+        
+        self.assertTrue(False)
+   
    
     def test_turn_pheremone(self):
         '''
         '''
-        ant = antSearch.ant(self.world) 
-        ant.location = (50,50)
+        
+        self.ant.location = (50,50)
         self.world.addPheremone((49,49)) 
         
-        possible_moves = self.world.findNeighbours(ant.location) 
+        possible_moves = self.world.findNeighbours(self.ant.location) 
         possible_moves.append((49,49))
         possible_moves.sort()
-        ant.turn()
-        self.assertEqual(ant.__moves__, possible_moves)
-        self.assertEqual(ant.location in possible_moves, True)
+        self.ant.turn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+
 
     def test_turn_food(self):
         '''
         '''
-        ant = antSearch.ant(self.world) 
-        ant.location = (98,2) # one away from food
+
+        self.ant.location = (98,2) # one away from food
         
-        possible_moves = self.world.findNeighbours(ant.location)
+        possible_moves = self.world.findNeighbours(self.ant.location)
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.foodLocation)
         
         possible_moves.sort()
-        ant.turn()
-        self.assertEqual(ant.__moves__, possible_moves)
-        self.assertEqual(ant.location in possible_moves, True)
+        self.ant.turn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+
    
     def test_picked_up_food(self):
         '''
         '''
-        ant = antSearch.ant(self.world) 
-        ant.location = self.world.foodLocation 
+    
+        self.ant.location = self.world.foodLocation 
      
-        self.assertEqual(ant.location, self.world.foodLocation)
-        self.assertEqual(ant.haveFood, False)
+        self.assertEqual(self.ant.location, self.world.foodLocation)
+        self.assertEqual(self.ant.haveFood, False)
 
-        ant.turn() # make ant take food
+        self.ant.turn() # make ant take food
 
-        self.assertEqual(ant.haveFood, True)
+        self.assertEqual(self.ant.haveFood, True)
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1)
 
-        new_location = ant.location
+        new_location = self.ant.location
 
-        self.assertNotEqual(ant.location, self.world.foodLocation)
-        ant.turn()
+        self.assertNotEqual(self.ant.location, self.world.foodLocation)
+        self.ant.turn()
 
         self.assertEqual(self.world.point(new_location).totalPheremones(), 1)
 
+   
     def test_drop_off_food(self):
         '''
         '''
-        ant = antSearch.ant(self.world) 
-        ant.location = self.world.foodLocation 
+
+        self.ant.location = self.world.foodLocation 
      
-        self.assertEqual(ant.location, self.world.foodLocation)
-        self.assertEqual(ant.haveFood, False)
+        self.assertEqual(self.ant.location, self.world.foodLocation)
+        self.assertEqual(self.ant.haveFood, False)
 
-        ant.turn() # make ant take food
+        self.ant.turn() # make ant take food
 
-        self.assertEqual(ant.haveFood, True)
+        self.assertEqual(self.ant.haveFood, True)
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1) 
 
-        ant.location = self.world.hiveLocation 
+        self.ant.location = self.world.hiveLocation 
         
-        ant.turn() # make and drop off food
+        self.ant.turn() # make and drop off food
         
-        self.assertEqual(ant.haveFood, False)
+        self.assertEqual(self.ant.haveFood, False)
         self.assertEqual(self.world.hive().food,1) 
+    
     
     def test_turn_hive_no_food(self):
         '''
         '''
-        ant = antSearch.ant(self.world) 
-        ant.location = (10,9)
         
-        possible_moves = self.world.findNeighbours(ant.location)
+        self.ant.location = (10,9)
+        
+        possible_moves = self.world.findNeighbours(self.ant.location)
         possible_moves.sort()
-        ant.turn()
-        self.assertEqual(ant.__moves__, possible_moves)
-        self.assertEqual(ant.location in possible_moves, True)
+        self.ant.turn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+    
     
     def test_turn_hive_with_food(self):
         ''' Tests that the possible moves for an ant with food are 
             correctly weighted given that the hive is next to the ant.
         '''
-        ant = antSearch.ant(self.world)
-        ant.location = (10,9)
-        ant.haveFood = True
         
-        possible_moves = self.world.findNeighbours(ant.location)
+        self.ant.location = (10,9)
+        self.ant.haveFood = True
+        
+        possible_moves = self.world.findNeighbours(self.ant.location)
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.hiveLocation)
         possible_moves.sort()
-        ant.turn()
+        self.ant.turn()
         
-        self.assertEqual(ant.__moves__, possible_moves)
-        self.assertEqual(ant.location in possible_moves, True)
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+    
     
     def test_move(self):
         '''
         '''
-        ant = antSearch.ant(self.world)
-        self.assertEqual(ant.location, self.world.hiveLocation)
-        possible_moves = self.world.findNeighbours(ant.location) 
         
-        ant.move()
+        self.assertEqual(self.ant.location, self.world.hiveLocation)
+        possible_moves = self.world.findNeighbours(self.ant.location) 
         
-        self.assertEqual(ant.location in possible_moves, True)
-        self.assertEqual(ant.lastPoint, self.world.hiveLocation)
+        self.ant.move()
+        
+        self.assertEqual(self.ant.location in possible_moves, True)
+        self.assertEqual(self.ant.lastPoint, self.world.hiveLocation)
 
-        test_point = ant.location
-        possible_moves = self.world.findNeighbours(ant.location) 
+        test_point = self.ant.location
+        possible_moves = self.world.findNeighbours(self.ant.location) 
        
-        ant.move()
+        self.ant.move()
         
-        self.assertEqual(ant.location in possible_moves, True)
-        self.assertEqual(ant.lastPoint, test_point)
+        self.assertEqual(self.ant.location in possible_moves, True)
+        self.assertEqual(self.ant.lastPoint, test_point)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
