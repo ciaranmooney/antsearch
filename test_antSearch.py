@@ -590,7 +590,8 @@ class TestWorld(unittest.TestCase):
 
 
 class TestAnt(unittest.TestCase):
-    '''
+    ''' A set of tests to make sure that the Ant class is behaving as it should.
+    
     '''
 
 
@@ -607,7 +608,12 @@ class TestAnt(unittest.TestCase):
         self.ant = antSearch.ant(self.world) 
 
     def test_init(self):
-        '''
+        ''' Tests that the ant is created correctly.
+            These tests check that the ant:
+            
+            * is in the correct world.
+            * has no food when created
+            * by default is located at the same point as the hive
         '''
         
         self.assertEqual(self.ant.world, self.world)
@@ -615,17 +621,44 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant.location, self.world.hiveLocation)
 
 
-    def test_leave_pheremone(self):
-        '''
+    def test_pre_turn_priorties_hive(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a hive over empty adjacent points.
         '''
         
-        original_location = (50,50)
-        self.ant.location = original_location
-        self.ant.haveFood = True
+        self.assertTrue(False)
+        
+        
+    def test_pre_turn_priorties_food(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a food point over empty adjacent points.
+        '''
+        
+        self.assertTrue(False)
+        
+        
+    def test_pre_turn_food_hive(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing both a food and hive point over empty adjacent points.
+        '''
+        
+        self.assertTrue(False)
+        
+                
+    def test_pre_turn_pheremones(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a point with pheremones over empty adjacent points.
+        '''
+        
+        self.assertTrue(False)
+        
 
-        self.assertEqual(self.world.point(self.ant.location), None)
-        self.ant.turn()
-        self.assertEqual(self.world.point(original_location).totalPheremones(), 1)
+    def test_pre_turn_multiple_pheremones(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a point with more pheremones that other points
+        '''
+        
+        self.assertTrue(False)
         
 
     def test_pre_turn(self):
@@ -645,28 +678,47 @@ class TestAnt(unittest.TestCase):
     
     
     def test_turn_with_food(self):
-        ''' This test should check that the ant deposit pheremones at current 
-            point, picks up food, or drops off food.
+        ''' This test checks that the ant deposits a single pheremones at 
+            current point when it has food.
         '''
         
-        current = self.ant.currentLocation
-        self.assertEqual(self.world.point(current).pheremones, 0)        
-        self.assert
+        original_location = (50,50)
+        self.ant.location = original_location
+        self.ant.haveFood = True
+
+        self.assertEqual(self.world.point(self.ant.location), None)
         self.ant.turn()
+        self.assertEqual(self.world.point(original_location).totalPheremones(), 1)
         
-        self.assertTrue(False)
-    
     
     def test_turn_with_food_hive(self):
+        ''' This test checks that when an ant turns with food on a hive point 
+            that it deposits the food at the hive
         '''
-        '''
+        
+        self.assertTrue(False)
         
         
     def test_turn_without_food(self):
         '''
         '''
         
+        self.assertTrue(False)
+        
+        
     def test_turn_without_food_on_food(self):    
+        '''
+        '''
+        
+        self.assertTrue(False)
+        
+        
+    def test_turn_with_food_on_food(self):    
+        '''
+        '''
+        
+        self.assertTrue(False)
+        
         
     def test_post_turn(self):
         ''' Checks that an ant moves to the point that was chosen in pre_turn.
