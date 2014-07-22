@@ -10,7 +10,6 @@ XXXX
 
 * Two line breaks between end of previous function body and next function or class
 
-
 Example:
 XXXX
 
