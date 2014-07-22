@@ -1,3 +1,18 @@
+# Copyright 2013,2014 Ciarán Mooney (general.mooney@googlemail.com)
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #! /usr/bin/env python
 
 import unittest
@@ -580,7 +595,10 @@ class TestAnt(unittest.TestCase):
 
 
     def setUp(self):
-        '''
+        ''' Creates a world for use in tests with a hive and food in the same 
+            location for all the tests.
+            
+            Creates an ant within this world for thet tests.
         '''
         
         hiveLocation = (10,10)
@@ -611,27 +629,44 @@ class TestAnt(unittest.TestCase):
         
 
     def test_pre_turn(self):
-        ''' Searches world for negibourhing spots and decides to which point
-            the next move will be.
+        ''' Searches world for negibourhing spots checks that the spot the ant
+            has chosen is in that neighbouring set.
             
+            Checks that ant has chosen a valid coordinate.
         '''
         
-        self.assertTrue(False)
+        self.assertEqual(self.ant.currentLocation, self.world.hiveLocation)
+        possible_moves = self.world.findNeighbours(self.ant.currenLocation)
+
+        self.ant.preTurn()
+        
+        self.assertEqual(self.ant.locationChoice in possible_moves, True)
+        self.assertEqual(type(self.ant.locationChoice), tuple)
     
     
-    def test_turn(self):
+    def test_turn_with_food(self):
         ''' This test should check that the ant deposit pheremones at current 
             point, picks up food, or drops off food.
         '''
         
-        self.assertEqual(self.ant.location, self.world.hiveLocation)
-        possible_moves = self.world.findNeighbours(self.ant.location) 
-
+        current = self.ant.currentLocation
+        self.assertEqual(self.world.point(current).pheremones, 0)        
+        self.assert
         self.ant.turn()
-        self.assertEqual(self.ant.location in possible_moves, True)
         
         self.assertTrue(False)
+    
+    
+    def test_turn_with_food_hive(self):
+        '''
+        '''
         
+        
+    def test_turn_without_food(self):
+        '''
+        '''
+        
+    def test_turn_without_food_on_food(self):    
         
     def test_post_turn(self):
         ''' Checks that an ant moves to the point that was chosen in pre_turn.

@@ -1,21 +1,19 @@
-#! /usr/bin/env python
+# Copyright 2013,2014 Ciarán Mooney (general.mooney@googlemail.com)
 
-# TODO
-# [] Write a 1x1, 2x1 and 3x1 1D simulation.
-# [] Re-read and comment all tests
-# [] Re-write tests to use the "setUP" function rather than creating new
-#    worlds each time.
-# [] Write food class - unnecessary
-# [] Write PyGame visuatilsation
-# [] Write style guide. One line between ''' ''' and code, two lines between
-#    different functions
-# [] There should be pre-step, step, post-step functions for points, ants and 
-#    the world.
-# [] Document counting from zero.
-# [] Re-write fragile tests.
-# [x] Make pheremones decay "independantly" depending on when they were
-#    deposited.
-# [x] Decay should be a rate, need a step counter of world.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#! /usr/bin/env python
 
 import random
 from random import choice
