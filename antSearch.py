@@ -110,6 +110,16 @@ class ant(object):
             each neighbour it and builds a weighted list.
             
             Chooses a random point from that weighted list.
+            
+            HaveFood = False
+                empty point = *1
+                point with x pheremones = *x
+                point with food = *(empty+pheremones)
+            
+            HaveFood = True
+                empty point = *1
+                point with x pheremones = *x
+                point with have = *(empty+pheremones)
         '''
         
         self.__moves__ = []

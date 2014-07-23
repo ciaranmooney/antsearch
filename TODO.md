@@ -13,6 +13,8 @@ TODO
     the world.
  [] Document counting from zero.
  [] Re-write fragile tests.
+ [] ant.move(): The weighting of pheremones will give a weighting to a point
+    with zero pheremones due to totalPheremones()+1.
  [x] Make pheremones decay "independantly" depending on when they were
     deposited.
  [x] Decay should be a rate, need a step counter of world.

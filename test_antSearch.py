@@ -647,8 +647,10 @@ class TestAnt(unittest.TestCase):
             correctly prioritises choosing a hive over empty adjacent points
         '''
         
-        self.ant.location = (10,9)
+        self.ant.location = (10,9) # ant placed next to hive
         self.ant.haveFood = True
+        
+        self.assertTrue(AllPointsAroundAntEmpty) 
         
         possible_moves = self.world.findNeighbours(self.ant.location)
         for each in range(len(possible_moves)):
@@ -704,14 +706,7 @@ class TestAnt(unittest.TestCase):
         '''
         
         self.assertTrue(False)
-        
-    def test_pre_turn_food_hive(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing both a food and hive point over empty adjacent points.
-        '''
-        
-        self.assertTrue(False)
-        
+
                 
     def test_pre_turn_pheremones(self):
         ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
@@ -774,17 +769,17 @@ class TestAnt(unittest.TestCase):
         self.ant.turn()
         self.assertEqual(self.world.point(original_location).totalPheremones(), 1)
         
-    
-    def test_turn_with_food_hive(self):
-        ''' This test checks that when an ant turns with food on a hive point 
-            that it deposits the food at the hive.
+    def test_turn_no_food(self):
+        ''' Tests that an ant with no food makes no changes to it's current 
+            point when it turns.
         '''
         
         self.assertTrue(False)
         
-        
-    def test_turn_without_food(self):
-        ''' 
+    
+    def test_turn_with_food_hive(self):
+        ''' This test checks that when an ant turns with food on a hive point 
+            that it deposits the food at the hive.
         '''
         
         self.assertTrue(False)
