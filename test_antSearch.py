@@ -335,10 +335,16 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(World2.food().foodLeft, 0)
 
     def test_find_neighbours(self):
-        '''
+        ''' Checks that world.findNeighbours returns a list of points around a
+            centre point.
+            
+            The list should be equivalent to a 3x3 grid with a hole in the
+            middle.
         '''
         centre1 = (11,34)
-        n_sol = [(10,35),(11,35),(12,35),(10,34),(12,34),(10,33),(11,33),(12,33)]
+        n_sol = [(10,35),(11,35),(12,35),
+                 (10,34),        (12,34),
+                 (10,33),(11,33),(12,33)]
         n_sol.sort()
 
         n = self.World3.findNeighbours(centre1)
@@ -591,7 +597,6 @@ class TestWorld(unittest.TestCase):
 
 class TestAnt(unittest.TestCase):
     ''' A set of tests to make sure that the Ant class is behaving as it should.
-    
     '''
 
 
@@ -621,47 +626,7 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant.location, self.world.hiveLocation)
 
 
-    def test_pre_turn_priorties_hive(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing a hive over empty adjacent points.
-        '''
-        
-        self.assertTrue(False)
-        
-        
-    def test_pre_turn_priorties_food(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing a food point over empty adjacent points.
-        '''
-        
-        self.assertTrue(False)
-        
-        
-    def test_pre_turn_food_hive(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing both a food and hive point over empty adjacent points.
-        '''
-        
-        self.assertTrue(False)
-        
-                
-    def test_pre_turn_pheremones(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing a point with pheremones over empty adjacent points.
-        '''
-        
-        self.assertTrue(False)
-        
-
-    def test_pre_turn_multiple_pheremones(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing a point with more pheremones that other points
-        '''
-        
-        self.assertTrue(False)
-        
-
-    def test_pre_turn(self):
+    def test_pre_turn_next(self):
         ''' Searches world for negibourhing spots checks that the spot the ant
             has chosen is in that neighbouring set.
             
@@ -675,6 +640,125 @@ class TestAnt(unittest.TestCase):
         
         self.assertEqual(self.ant.locationChoice in possible_moves, True)
         self.assertEqual(type(self.ant.locationChoice), tuple)
+
+
+    def test_pre_turn_priorties_hive_food(self):
+        ''' Tests, in an ants pre-turn step, that when an ant has food, it 
+            correctly prioritises choosing a hive over empty adjacent points
+        '''
+        
+        self.ant.location = (10,9)
+        self.ant.haveFood = True
+        
+        possible_moves = self.world.findNeighbours(self.ant.location)
+        for each in range(len(possible_moves)):
+            possible_moves.append(self.world.hiveLocation)
+        possible_moves.sort()
+        self.ant.turn()
+        
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+        
+        self.assertTrue(False)
+        
+    def test_pre_turn_priorties_hive_no_food(self):
+        ''' Tests, in an ants pre-turn step, that when an ant does not have food
+            it does not prioritise a hive.
+        '''
+        
+        self.ant.location = (10,9)
+        
+        possible_moves = self.world.findNeighbours(self.ant.location)
+        possible_moves.sort()
+        self.ant.turn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+        
+        self.assertTrue(False)
+        
+        
+    def test_pre_turn_priorties_food_no_food(self):
+        ''' Tests, in an ants pre-turn step, that when an ant has no food that 
+            it has correctly prioritises choosing a food point over empty 
+            adjacent points.
+        '''
+        
+        self.ant.location = (98,2) # one away from food point
+        
+        possible_moves = self.world.findNeighbours(self.ant.location)
+        for each in range(len(possible_moves)):
+            possible_moves.append(self.world.foodLocation)
+        
+        possible_moves.sort()
+        self.ant.preTurn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+        
+        self.assertTrue(False)
+        
+        
+    def test_pre_turn_priorties_food_food(self):
+        ''' Tests, in an ants pre-turn step, that when an ant has food that it 
+            has not prioritised choosing a food point over empty adjacent 
+            points.
+        '''
+        
+        self.assertTrue(False)
+        
+    def test_pre_turn_food_hive(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing both a food and hive point over empty adjacent points.
+        '''
+        
+        self.assertTrue(False)
+        
+                
+    def test_pre_turn_pheremones(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a point with pheremones over empty adjacent points.
+        '''
+                        
+        self.ant.location = (50,50)
+        self.world.addPheremone((49,49)) 
+        
+        possible_moves = self.world.findNeighbours(self.ant.location) 
+        possible_moves.append((49,49))
+        possible_moves.sort()
+        self.ant.preTurn()
+        self.assertEqual(self.ant.__moves__, possible_moves)
+        self.assertEqual(self.ant.location in possible_moves, True)
+        
+        self.assertTrue(False)
+        
+
+    def test_pre_turn_multiple_pheremones(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a point with more pheremones that other points
+        '''
+        
+        self.assertTrue(False)
+        
+
+    def test_pre_turn_priorities_multiple_food(self):
+        ''' Tests that when an ant has food and is adjacent to a hive,
+            pheremones, and empty points that it priorites the next step in the
+            following order. 
+            
+            priority hive, pheremones, then empty
+        '''
+        
+        self.assertTrue(False)
+        
+                
+    def test_pre_turn_priorities_multiple_no_food(self):
+        ''' Tests that when an ant has no food and is adjacent to a food,
+            pheremones, and empty points that it priorites the next step in the
+            following order. 
+            
+            priority food, pheremones, then empty
+        '''
+        
+        self.assertTrue(False)
     
     
     def test_turn_with_food(self):
@@ -693,75 +777,23 @@ class TestAnt(unittest.TestCase):
     
     def test_turn_with_food_hive(self):
         ''' This test checks that when an ant turns with food on a hive point 
-            that it deposits the food at the hive
+            that it deposits the food at the hive.
         '''
         
         self.assertTrue(False)
         
         
     def test_turn_without_food(self):
-        '''
+        ''' 
         '''
         
         self.assertTrue(False)
         
         
     def test_turn_without_food_on_food(self):    
-        '''
-        '''
-        
-        self.assertTrue(False)
-        
-        
-    def test_turn_with_food_on_food(self):    
-        '''
+        ''' Tests that an ant without food on a food point picks up some food.
         '''
         
-        self.assertTrue(False)
-        
-        
-    def test_post_turn(self):
-        ''' Checks that an ant moves to the point that was chosen in pre_turn.
-        '''
-        
-        self.assertTrue(False)
-   
-   
-    def test_turn_pheremone(self):
-        '''
-        '''
-        
-        self.ant.location = (50,50)
-        self.world.addPheremone((49,49)) 
-        
-        possible_moves = self.world.findNeighbours(self.ant.location) 
-        possible_moves.append((49,49))
-        possible_moves.sort()
-        self.ant.turn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
-
-
-    def test_turn_food(self):
-        '''
-        '''
-
-        self.ant.location = (98,2) # one away from food
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        for each in range(len(possible_moves)):
-            possible_moves.append(self.world.foodLocation)
-        
-        possible_moves.sort()
-        self.ant.turn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
-
-   
-    def test_picked_up_food(self):
-        '''
-        '''
-    
         self.ant.location = self.world.foodLocation 
      
         self.assertEqual(self.ant.location, self.world.foodLocation)
@@ -774,14 +806,26 @@ class TestAnt(unittest.TestCase):
 
         new_location = self.ant.location
 
-        self.assertNotEqual(self.ant.location, self.world.foodLocation)
-        self.ant.turn()
+        self.assertTrue(False)
+        
+        
+    def test_turn_with_food_on_food(self):    
+        ''' Test that an ant with food on a food point does not pick up food.
+        '''
+        
+        self.assertTrue(False)
+        
 
-        self.assertEqual(self.world.point(new_location).totalPheremones(), 1)
-
+    def test_post_turn(self):
+        ''' Checks that an ant moves to the point that was chosen in pre_turn.
+        '''
+        
+        self.assertTrue(False)
+   
    
     def test_drop_off_food(self):
-        '''
+        ''' XXX This needs to be broken up into two separate tests. Think I have
+            already made them though
         '''
 
         self.ant.location = self.world.foodLocation 
@@ -800,37 +844,6 @@ class TestAnt(unittest.TestCase):
         
         self.assertEqual(self.ant.haveFood, False)
         self.assertEqual(self.world.hive().food,1) 
-    
-    
-    def test_turn_hive_no_food(self):
-        '''
-        '''
-        
-        self.ant.location = (10,9)
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        possible_moves.sort()
-        self.ant.turn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
-    
-    
-    def test_turn_hive_with_food(self):
-        ''' Tests that the possible moves for an ant with food are 
-            correctly weighted given that the hive is next to the ant.
-        '''
-        
-        self.ant.location = (10,9)
-        self.ant.haveFood = True
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        for each in range(len(possible_moves)):
-            possible_moves.append(self.world.hiveLocation)
-        possible_moves.sort()
-        self.ant.turn()
-        
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
     
     
     def test_move(self):

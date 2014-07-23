@@ -85,7 +85,7 @@ class ant(object):
             move (priority food, pheremones, then empty)
             
             if ant has food but not on food point then deposit pheremone 
-            move (pheremones first priority, then empty)
+            move (priority hive, pheremones, then empty)
         '''
         
         if self.haveFood == False and type(self.world.point(self.location)) == food:
