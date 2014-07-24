@@ -19,8 +19,10 @@ turn : deposit pheremones at current point, pick up food, or drop off
     food
 post-turn : move to next point previoulsy chosen
 
-Move Priorties
+Move Behaviour
 --------------
+
+An ant remembers its last location and removes this as a choice for the next possible move.
 
 When an ant searches around for another point to move to it will choose randomly but weight its decision based on whether the adjacent point contains food, pheremones or a hive. 
 

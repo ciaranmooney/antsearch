@@ -650,16 +650,25 @@ class TestAnt(unittest.TestCase):
         self.ant.location = (10,9) # ant placed next to hive
         self.ant.haveFood = True
         
-        self.assertTrue(AllPointsAroundAntEmpty) 
-        
         possible_moves = self.world.findNeighbours(self.ant.location)
+        
+        for each_point in possible_moves:
+            if type(self.world.point(each_point)) == 'hive':
+                pass
+                
+            else:  
+                self.assertTrue(self.world.point(each_point) == None)
+                
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.hiveLocation)
         possible_moves.sort()
-        self.ant.turn()
+        
+        self.ant.preTurn()
         
         self.assertEqual(self.ant.__moves__, possible_moves)
         self.assertEqual(self.ant.location in possible_moves, True)
+        self.assertTrue(ThatGreatestNumberOfPointsIsForHive)
+        
         
         self.assertTrue(False)
         

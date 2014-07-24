@@ -65,11 +65,23 @@ class ant(object):
     def __init__(self, world):
         ''' Initialise ant with world that it is going to search.
         '''    
+        
         self.world = world
         self.haveFood = False
         self.location = self.world.hiveLocation
         self.lastPoint = None
+        self.nextPoint = None
         self.__moves__ = []
+    
+    
+    def preTurn:
+        ''' Controls an ants pre-turn behaviour. At the moment in pre-turn an 
+            ant just surveys his neighbour points and decides where to go next.
+        '''
+        
+        self.chooseMove()
+        
+        break
     
     
     def turn(self):
@@ -101,13 +113,15 @@ class ant(object):
             #print("Ant adding pheremones")
             #print(self.location)
             self.world.addPheremone(self.location)
-        
-        self.move()
 
+    def postTurn:
+        '''
+        '''
+        pass
     
-    def move(self):
+    def chooseMove(self):
         ''' Finds neighbours from world. Then checks to see what type of point
-            each neighbour it and builds a weighted list.
+            each neighbour is and builds a weighted list.
             
             Chooses a random point from that weighted list.
             
@@ -122,45 +136,22 @@ class ant(object):
                 point with have = *(empty+pheremones)
         '''
         
-        self.__moves__ = []
-        self.neighbours = self.world.findNeighbours(self.location) 
+        weights = {}
+        neighbours = self.world.findNeighbours(self.location) 
         
-        if self.lastPoint in self.neighbours:
-            self.neighbours.remove(self.lastPoint)
+        if self.lastPoint in neighbours:
+            neighbours.remove(self.lastPoint)
         
-        if self.haveFood == False:
-            for coord in self.neighbours:
-                p = self.world.point(coord)
-                if hasattr(p, 'pheremones'):
-                    for i in range(p.totalPheremones()+1):
-                        self.__moves__.append(coord)
-                else:
-                    self.__moves__.append(coord)
-
-            for coord in self.neighbours:
-                multiple = len(self.__moves__)
-                if isinstance(self.world.point(coord), food):
-                    for i in range(multiple):
-                        self.__moves__.append(coord)
-
-        if self.haveFood == True:
-            for coord in self.neighbours:
-                p = self.world.point(coord)
-                if hasattr(p, 'pheremones'):
-                    for i in range(p.totalPheremones()+1):
-                        self.__moves__.append(coord)
-                else:
-                    self.__moves__.append(coord)
-
-            for coord in self.neighbours:
-                multiple = len(self.__moves__)
-                if isinstance(self.world.point(coord), hive):
-                    for i in range(multiple):
-                        self.__moves__.append(coord)
+        for coord in neighbours:
+            weights[coord] = 0
+        
+        for coord in neighbours:
+            p = self.world.point(coord)
+            if hasattr(p, 'pheremones'):
+                weights[coord] =  p.pheremonesTotal()
 
         self.__moves__.sort()
-        self.lastPoint = self.location
-        self.location = choice(self.__moves__)
+        self.nextPoint = choice(self.__moves__)
 
 
 class world(object):
