@@ -74,14 +74,13 @@ class ant(object):
         self.__moves__ = []
     
     
-    def preTurn:
+    def preTurn(self):
         ''' Controls an ants pre-turn behaviour. At the moment in pre-turn an 
             ant just surveys his neighbour points and decides where to go next.
         '''
         
         self.chooseMove()
-        
-        break
+
     
     
     def turn(self):
@@ -114,7 +113,7 @@ class ant(object):
             #print(self.location)
             self.world.addPheremone(self.location)
 
-    def postTurn:
+    def postTurn(self):
         '''
         '''
         pass
