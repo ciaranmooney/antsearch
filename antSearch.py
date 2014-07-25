@@ -71,7 +71,7 @@ class ant(object):
         self.location = self.world.hiveLocation
         self.lastPoint = None
         self.nextPoint = None
-        self.__moves__ = []
+        self.moves = []
     
     
     def preTurn(self):
@@ -135,22 +135,22 @@ class ant(object):
                 point with have = *(empty+pheremones)
         '''
         
-        weights = {}
-        neighbours = self.world.findNeighbours(self.location) 
+        self.moves.append(weigthing(neighbours, criteria, weightFunc)) # empty points
+        self.moves.append(weigthing(neighbours, criteria, weightFunc)) # pheremone points
         
-        if self.lastPoint in neighbours:
-            neighbours.remove(self.lastPoint)
+        if self.haveFood == True
+            self.moves.append(weigthing(neighbours, criteria, weightFunc)) # hive points
+        if self.haveFood == False and type(p) == "food":
+            self.moves.append(weigthing(neighbours, criteria, weightFunc)) # food points
         
-        for coord in neighbours:
-            weights[coord] = 0
+        self.nextPoint = choice(self.moves)
+    
+    def weighting(self, neighbours, criteria, weightFunc):
+        ''' Takes the neighbours list and generates a weighted list based on 
+            criteria and the weightFunc
+        '''
         
-        for coord in neighbours:
-            p = self.world.point(coord)
-            if hasattr(p, 'pheremones'):
-                weights[coord] =  p.pheremonesTotal()
-
-        self.__moves__.sort()
-        self.nextPoint = choice(self.__moves__)
+        pass
 
 
 class world(object):

@@ -793,6 +793,11 @@ class TestAnt(unittest.TestCase):
         
         self.assertTrue(False)
         
+    def test_chooseMove(self):
+        ''' Tests the choose move function a move from the set generated.
+        '''
+        
+        self.assertTrue(False)
         
     def test_turn_without_food_on_food(self):    
         ''' Tests that an ant without food on a food point picks up some food.
