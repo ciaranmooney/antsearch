@@ -135,23 +135,52 @@ class ant(object):
                 point with have = *(empty+pheremones)
         '''
         
-        self.moves.append(weigthing(neighbours, criteria, weightFunc)) # empty points
-        self.moves.append(weigthing(neighbours, criteria, weightFunc)) # pheremone points
+        neighbours = self.world.findNeighbours(self.location)
+        
+        self.moves.append(weigthing(neighbours, None)) # empty points
+        self.moves.append(weigthing(neighbours, "pheremones")) # pheremone points
         
         if self.haveFood == True
-            self.moves.append(weigthing(neighbours, criteria, weightFunc)) # hive points
+            self.moves.append(weigthing(neighbours, "hive")) # hive points
         if self.haveFood == False and type(p) == "food":
-            self.moves.append(weigthing(neighbours, criteria, weightFunc)) # food points
+            self.moves.append(weigthing(neighbours, "food")) # food points
         
         self.nextPoint = choice(self.moves)
     
-    def weighting(self, neighbours, criteria, weightFunc):
-        ''' Takes the neighbours list and generates a weighted list based on 
+    def weighting(self, neighbours, criteria):
+        ''' Takes the neighbours list and returns a weighted list based on 
             criteria and the weightFunc
+        '''
+        
+        # if criteria choose function
+        
+        
+    def emptyWeights(self):
+        '''
+        '''
+        
+        pass
+    
+    
+    def pheremoneWeights(self):
+        '''
         '''
         
         pass
 
+
+    def hiveWeights(self):
+        '''
+        '''
+        
+        pass
+    
+    
+    def foodWeights(self):
+        '''
+        '''
+        
+        pass
 
 class world(object):
     ''' World contains the hive, the pheremones, and the food.

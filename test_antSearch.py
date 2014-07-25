@@ -733,7 +733,78 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant.location in possible_moves, True)
         
         self.assertTrue(False)
+     
+     
+    def test_emptyWeights(self, point):
+        ''' Given a point that is empty it should return a multiple of 1
+        '''
         
+        self.assertTrue(False)
+
+
+    def test_pheremoneWeights(self, point):
+        ''' Given a point that has pheremones it should return a 1x the 
+            pheremones
+        '''
+        
+        self.assertTrue(False)
+        
+        
+    def test_hiveWeights(self):
+        '''
+        '''
+        
+        self.assertTrue(False)
+        
+        
+    def test_foodWeights(self):
+        '''
+        '''
+        
+        self.assertTrue(False)
+        
+        
+    def test_weighting_empty(self):
+        ''' Checks that given a list of empty points, an empty point criteria 
+            and a weighting function that it returns an un-weighted list.
+        '''
+        
+        neighbours = self.world.findNeighbours(self.ant.location)
+               
+        self.assertTrue(False)
+    
+    def test_weighting_pheremones(self):
+        ''' Checks that given a list of points with some pheremones, a pheremone 
+            point criteria and a weighting function that it returns an 
+            appropirately weighted list.
+        '''
+        
+        neighbours = self.world.findNeighbours(self.ant.location)
+               
+        self.assertTrue(False)
+ 
+
+    def test_weighting_hive(self):
+        ''' Checks that given a list of points with a hive, a hive criteria 
+            and a weighting function that it returns an appropirately weighted 
+            list.
+        '''
+        
+        neighbours = self.world.findNeighbours(self.ant.location)
+               
+        self.assertTrue(False)
+ 
+ 
+    def test_weighting_food(self):
+        ''' Checks that given a list of points with some food points, a food 
+            criteria and a weighting function that it returns an appropirately 
+            weighted list.
+        '''
+        
+        neighbours = self.world.findNeighbours(self.ant.location)
+               
+        self.assertTrue(False)
+ 
 
     def test_pre_turn_multiple_pheremones(self):
         ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
