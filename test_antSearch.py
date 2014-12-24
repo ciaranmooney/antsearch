@@ -57,7 +57,7 @@ class Simulation(unittest.TestCase):
         
         sim = antSearch.simulation(self.ants, self.world)
 
-        sim.run()
+        #sim.run()
 
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
@@ -653,22 +653,22 @@ class TestAnt(unittest.TestCase):
         possible_moves = self.world.findNeighbours(self.ant.location)
         
         for each_point in possible_moves:
-            if type(self.world.point(each_point)) == 'hive':
+            if isinstance(self.world.point(each_point), antSearch.hive):
                 pass
-                
             else:  
                 self.assertTrue(self.world.point(each_point) == None)
                 
         for each in range(len(possible_moves)):
             possible_moves.append(self.world.hiveLocation)
+        
         possible_moves.sort()
         
         self.ant.preTurn()
         
         self.assertEqual(self.ant.__moves__, possible_moves)
         self.assertEqual(self.ant.location in possible_moves, True)
+        print(self.ant.__moves__)
         self.assertTrue(ThatGreatestNumberOfPointsIsForHive)
-        
         
         self.assertTrue(False)
         

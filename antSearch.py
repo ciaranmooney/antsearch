@@ -75,7 +75,7 @@ class ant(object):
     
     
     def preTurn(self):
-        ''' Controls an ants pre-turn behaviour. At the moment in pre-turn an 
+        ''' Controls an ants pre-turn behaviour. At the moment, in pre-turn an 
             ant just surveys his neighbour points and decides where to go next.
         '''
         
@@ -140,7 +140,7 @@ class ant(object):
         self.moves.append(weigthing(neighbours, None)) # empty points
         self.moves.append(weigthing(neighbours, "pheremones")) # pheremone points
         
-        if self.haveFood == True
+        if self.haveFood == True:
             self.moves.append(weigthing(neighbours, "hive")) # hive points
         if self.haveFood == False and type(p) == "food":
             self.moves.append(weigthing(neighbours, "food")) # food points
