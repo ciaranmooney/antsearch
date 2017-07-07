@@ -35,6 +35,34 @@ class Simulation(unittest.TestCase):
             No phermeones should be deposited.
         '''
         
+        fLoc = (0,1)
+        hLoc = (0,0)
+        decayRate = 0
+        self.world = antSearch.world(3, fLoc, hLoc, decayRate)
+        ## XXX ###
+        # .world() init syntax is for number to be size of array
+        # ie 1 = 1x1, 2 = 2x2. need to change to be (3), (3,3) or (1,2)
+        self.ants = []
+        self.ants.append(antSearch.ant(self.world))
+       
+        food = self.world.food()
+        food.foodLeft = 1
+        self.world.totalFood = 1
+
+        self.assertEqual(self.world.food(), food)
+        self.assertEqual(type(self.world.hive()), antSearch.hive)
+
+        self.assertEqual(self.world.hive().food, 0)
+        self.assertEqual(self.world.food().foodLeft, 1)
+        
+        sim = antSearch.simulation(self.ants, self.world)
+
+        #sim.run()
+
+        self.assertEqual(self.world.hive().food, 1)
+        self.assertEqual(self.world.food().foodLeft, 0)
+
+        print(self.world.pheremones)
         self.assertTrue(false)
         
     def test_simulation_1x3(self):
@@ -63,11 +91,11 @@ class Simulation(unittest.TestCase):
         self.ants = []
         self.ants.append(antSearch.ant(self.world))
        
-        food = self.world.food()
-        food.foodLeft = 1
+        self.food = self.world.food()
+        self.food.foodLeft = 1
         self.world.totalFood = 1
 
-        self.assertEqual(self.world.food(), food)
+        self.assertEqual(self.world.food(), self.food)
         self.assertEqual(type(self.world.hive()), antSearch.hive)
 
         self.assertEqual(self.world.hive().food, 0)
@@ -75,7 +103,7 @@ class Simulation(unittest.TestCase):
         
         sim = antSearch.simulation(self.ants, self.world)
 
-        #sim.run()
+        sim.run()
 
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
@@ -459,6 +487,22 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(self.World3.point(point).totalPheremones(), 2)
         
         self.assertEqual(self.World3.pheremones, [point])
+
+    def test_addPheremone_empty_point_zero_deay(self):
+        ''' Tests that adding pheremones to a point with decay rate set to
+            zero work.
+        '''
+        point = (49,49)
+        self.World3.pheremoneDecayRate=0
+        self.assertEqual(self.World3.point(point), None)
+        self.World3.addPheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.addPheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 2)
+        
+        self.assertEqual(self.World3.pheremones, [point])
+        
+        self.assertTrue(False)
     
     def test_addPheremone_hive_point(self):
         '''

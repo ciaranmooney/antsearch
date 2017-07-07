@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import random
 from random import choice
@@ -73,7 +74,6 @@ class ant(object):
         self.nextPoint = None
         self.moves = []
     
-    
     def preTurn(self):
         ''' Controls an ants pre-turn behaviour. At the moment, in pre-turn an 
             ant just surveys his neighbour points and decides where to go next.
@@ -81,8 +81,6 @@ class ant(object):
         
         self.chooseMove()
 
-    
-    
     def turn(self):
         '''
         Controls what an ant does each turn.
@@ -98,25 +96,37 @@ class ant(object):
             if ant has food but not on food point then deposit pheremone 
             move (priority hive, pheremones, then empty)
         '''
-        
-        if self.haveFood == False and type(self.world.point(self.location)) == food:
-            #print("Got food!")
+        print("ant turning") 
+        print("Current location: "+str(self.location))
+        print("Ant Food: "+ str(self.haveFood))
+        self.preTurn()
+
+        if self.haveFood == False and isinstance(self.world.point(self.location), food):
+            print("Got food!")
             self.world.food().removeFood()
             self.haveFood = True
 
-        if self.haveFood == True and type(self.world.point(self.location)) == hive:
+        if self.haveFood == True and isinstance(self.world.point(self.location), hive):
             self.world.hive().addFood()
             self.haveFood = False
 
-        if self.haveFood == True and type(self.world.point(self.location)) != food:
-            #print("Ant adding pheremones")
-            #print(self.location)
+        if self.haveFood == False and isinstance(self.world.point(self.location), hive):
+            print("Still in hive")
+
+        if self.haveFood == True and not isinstance(self.world.point(self.location), food):
+            print("Ant adding pheremones")
+            print(self.location)
             self.world.addPheremone(self.location)
+
+        self.postTurn()
+        print("Next point: " + str(self.nextPoint))
+        print("ant finish turning")
 
     def postTurn(self):
         '''
         '''
-        pass
+        self.lastPoint = self.location
+        self.location = self.nextPoint
     
     def chooseMove(self):
         ''' Finds neighbours from world. Then checks to see what type of point
@@ -136,16 +146,31 @@ class ant(object):
         '''
         
         neighbours = self.world.findNeighbours(self.location)
-        
-        self.moves.append(weigthing(neighbours, None)) # empty points
-        self.moves.append(weigthing(neighbours, "pheremones")) # pheremone points
-        
-        if self.haveFood == True:
-            self.moves.append(weigthing(neighbours, "hive")) # hive points
-        if self.haveFood == False and type(p) == "food":
-            self.moves.append(weigthing(neighbours, "food")) # food points
-        
-        self.nextPoint = choice(self.moves)
+        weights = []
+        print(neighbours)
+        for each in neighbours:
+            print(type(self.world.point(each)))
+            if self.world.point(each) == None:
+                weights.append(each)
+
+            if isinstance(self.world.point(each), point):
+                pher = self.world.point(each).totalPheremones()
+                for i in range(pher):
+                    weights.append(each)
+
+            if isinstance(self.world.point(each), hive) and self.haveFood == True:
+                # The range(len(weights)) method only works if this is run last
+                for i in range(100):
+                    weights.append(each)
+
+            if isinstance(self.world.point(each), food) and self.haveFood == False:
+                print("FOOD NEXT DOOR")
+                for i in range(len(weights)*2):
+                    weights.append(each)
+
+        print("weights")
+        print(weights)
+        self.nextPoint = choice(weights)
     
     def weighting(self, neighbours, criteria):
         ''' Takes the neighbours list and returns a weighted list based on 
@@ -321,6 +346,7 @@ class world(object):
         #print(self.point(coords))
         if self.point(coords) == None:
             #print("No point at", coords)
+            print(self.pheremoneDecayRate)
             self.world[x][y] = point(self.pheremoneDecayRate)
             self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
@@ -397,9 +423,11 @@ class point(object):
         '''
 
         self.pheremones  = []
-        for i in range(decay):
-            self.pheremones.append(0)
-        
+        if decay == 0:
+            self.pheremones = 0
+        else:
+            for i in range(decay):
+                self.pheremones.append(0)
 
     def pheremoneDecay(self, step):
         ''' Sets a value of self.pheremones to zero to indicate decay of the
@@ -413,8 +441,10 @@ class point(object):
         ''' Increments an entry in self.pheremones which contains the total
             pheremones added for each step.
         '''
-        
-        self.pheremones[step % len(self.pheremones)] += 1
+        if isinstance(self.pheremones, int):
+            self.pheremones = self.pheremones + 1
+        else:
+            self.pheremones[step % len(self.pheremones)] += 1
         
         
     def totalPheremones(self):
@@ -422,10 +452,13 @@ class point(object):
         '''
         runningTotal = 0
         
-        for i in self.pheremones:
-            runningTotal = runningTotal + i
+        if isinstance(self.pheremones, int):
+            return self.pheremones
+        else:
+            for i in self.pheremones:
+                runningTotal = runningTotal + i
         
-        return runningTotal
+            return runningTotal
 
 
 class hive(object):
