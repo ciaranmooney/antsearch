@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 import antSearch
