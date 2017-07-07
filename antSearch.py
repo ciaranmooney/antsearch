@@ -355,7 +355,7 @@ class world(object):
         
         return self.point(point).totalPheremones() != 0
 
-        
+       
     def pheremoneDecay(self):
         ''' Decreases the pheremone count by one.
 			Tidies up self.pheremones to only include points with
@@ -407,7 +407,7 @@ class point(object):
         '''
         
         self.pheremones[step % len(self.pheremones)] = 0
-        
+
         
     def pheremoneAdd(self, step):
         ''' Increments an entry in self.pheremones which contains the total
