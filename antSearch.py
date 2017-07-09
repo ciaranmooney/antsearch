@@ -343,24 +343,17 @@ class world(object):
         '''
 
         x, y = coords
-        #print(self.point(coords))
         if self.point(coords) == None:
-            #print("No point at", coords)
             print(self.pheremoneDecayRate)
             self.world[x][y] = point(self.pheremoneDecayRate)
             self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
-                #print(self.pheremones)
                 self.pheremones.append(coords)
-                #print(self.pheremones)
 			    
         elif type(self.point(coords)) == point:
-            #print("Point at", coords)
             self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
                 self.pheremones.append(coords)
-            #print(self.pheremones)
-        
 
     def removePheremone(self, coords):
         ''' Decreases the pheremone attribute of a point at the coordinates.
@@ -417,6 +410,8 @@ class point(object):
         or food, or hive.
     '''
 
+    # XXX I reckon the point needs a .turn method to control pheremone decay
+
     def __init__(self, decay):
         ''' Creates an empty list for the pheremones whose size is equal to the
             number of steps required for decaying.
@@ -433,8 +428,9 @@ class point(object):
         ''' Sets a value of self.pheremones to zero to indicate decay of the
             pheremone trail.
         '''
-        
-        self.pheremones[step % len(self.pheremones)] = 0
+        print("Step:", step, "Pheremones", self.pheremones)
+        self.pheremones[(step-1) % len(self.pheremones)] = 0
+        print("Step:", step, "Pheremones", self.pheremones)
 
         
     def pheremoneAdd(self, step):

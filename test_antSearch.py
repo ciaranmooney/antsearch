@@ -63,7 +63,7 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.food().foodLeft, 0)
 
         print(self.world.pheremones)
-        self.assertTrue(false)
+        self.assertTrue(False)
         
     def test_simulation_1x3(self):
         ''' 1D array with 3 spaces. Have in far left, food far right. An ant
@@ -233,7 +233,7 @@ class TestPoint(unittest.TestCase):
             
             Nb. Fragile test dependant on self.decay being equal to 10.
         '''
-        
+
         self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(0)  # step 1
         self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
@@ -241,9 +241,11 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
         self.p.pheremoneAdd(1)  # step 2
         self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
-        self.p.pheremoneDecay(10)
+        self.p.pheremoneDecay(10) # step 10
+        self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
+        self.p.pheremoneDecay(11) # step 11
         self.assertEqual(self.p.pheremones, [0,1,0,0,0,0,0,0,0,0])
-        self.p.pheremoneDecay(11)
+        self.p.pheremoneDecay(12) # step 12
         self.assertEqual(self.p.pheremones, [0,0,0,0,0,0,0,0,0,0])
         self.assertEqual(self.p.totalPheremones(), 0)
         
@@ -586,16 +588,18 @@ class TestWorld(unittest.TestCase):
 
         p = (1,1)
         self.World3.pheremoneDecayRate = 3
-        
+
+        self.assertEqual(self.World3.point(p), None)
+        self.World3.turn() 
         self.assertEqual(self.World3.point(p), None)
         self.World3.addPheremone(p)
         self.assertEqual(self.World3.point(p).totalPheremones(), 1)
         
-        self.World3.turn() # this breaks the tests as the world.pheremoneDecay() method is called here too
+        self.World3.turn() 
         self.assertEqual(self.World3.point(p).totalPheremones(), 1)
-        
-        self.assertTrue(False)
-        
+       
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p).totalPheremones(), 0)
         
     def test_pheremoneDecay_rate_different(self):
         ''' Creates pheremone at different steps of the simulation and
