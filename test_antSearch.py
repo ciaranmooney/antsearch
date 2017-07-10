@@ -912,8 +912,12 @@ class TestAnt(unittest.TestCase):
         ''' Checks that an ant moves to the point that was chosen in pre_turn.
         '''
         
-        self.assertTrue(False)
-   
+        print(self.ant.location) 
+        self.assertEqual(self.ant.location, (10,10)) # match setup.
+        self.ant.preTurn()
+        nextLocation = self.ant.nextPoint
+        self.ant.postTurn()
+        self.assertEqual(self.ant.location, nextLocation)
    
     def test_drop_off_food(self):
         ''' XXX This needs to be broken up into two separate tests. Think I have
