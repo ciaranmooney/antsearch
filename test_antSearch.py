@@ -71,7 +71,7 @@ class Simulation(unittest.TestCase):
             pheremone in the middle.
         '''
         
-        self.assertTrue(false)
+        self.assertTrue(False)
 
     def test_simulation_3x3(self):
         ''' Create a 3x3 grid with food and hive in opposite corners. 
@@ -699,42 +699,17 @@ class TestAnt(unittest.TestCase):
             Checks that ant has chosen a valid coordinate.
         '''
         
-        self.assertEqual(self.ant.currentLocation, self.world.hiveLocation)
-        possible_moves = self.world.findNeighbours(self.ant.currenLocation)
+        self.assertEqual(self.ant.location, self.world.hiveLocation)
+        possible_moves = self.world.findNeighbours(self.ant.location)
 
         self.ant.preTurn()
         
-        self.assertEqual(self.ant.locationChoice in possible_moves, True)
-        self.assertEqual(type(self.ant.locationChoice), tuple)
-
+        self.assertEqual(self.ant.nextPoint in possible_moves, True)
 
     def test_pre_turn_priorties_hive_food(self):
         ''' Tests, in an ants pre-turn step, that when an ant has food, it 
             correctly prioritises choosing a hive over empty adjacent points
         '''
-        
-        self.ant.location = (10,9) # ant placed next to hive
-        self.ant.haveFood = True
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        
-        for each_point in possible_moves:
-            if isinstance(self.world.point(each_point), antSearch.hive):
-                pass
-            else:  
-                self.assertTrue(self.world.point(each_point) == None)
-                
-        for each in range(len(possible_moves)):
-            possible_moves.append(self.world.hiveLocation)
-        
-        possible_moves.sort()
-        
-        self.ant.preTurn()
-        
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
-        print(self.ant.__moves__)
-        self.assertTrue(ThatGreatestNumberOfPointsIsForHive)
         
         self.assertTrue(False)
         
@@ -742,14 +717,6 @@ class TestAnt(unittest.TestCase):
         ''' Tests, in an ants pre-turn step, that when an ant does not have food
             it does not prioritise a hive.
         '''
-        
-        self.ant.location = (10,9)
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        possible_moves.sort()
-        self.ant.turn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
         
         self.assertTrue(False)
         
@@ -759,17 +726,6 @@ class TestAnt(unittest.TestCase):
             it has correctly prioritises choosing a food point over empty 
             adjacent points.
         '''
-        
-        self.ant.location = (98,2) # one away from food point
-        
-        possible_moves = self.world.findNeighbours(self.ant.location)
-        for each in range(len(possible_moves)):
-            possible_moves.append(self.world.foodLocation)
-        
-        possible_moves.sort()
-        self.ant.preTurn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
         
         self.assertTrue(False)
         
@@ -788,27 +744,17 @@ class TestAnt(unittest.TestCase):
             choosing a point with pheremones over empty adjacent points.
         '''
                         
-        self.ant.location = (50,50)
-        self.world.addPheremone((49,49)) 
-        
-        possible_moves = self.world.findNeighbours(self.ant.location) 
-        possible_moves.append((49,49))
-        possible_moves.sort()
-        self.ant.preTurn()
-        self.assertEqual(self.ant.__moves__, possible_moves)
-        self.assertEqual(self.ant.location in possible_moves, True)
-        
         self.assertTrue(False)
      
      
-    def test_emptyWeights(self, point):
+    def test_emptyWeights(self):
         ''' Given a point that is empty it should return a multiple of 1
         '''
-        
+         
         self.assertTrue(False)
 
 
-    def test_pheremoneWeights(self, point):
+    def test_pheremoneWeights(self):
         ''' Given a point that has pheremones it should return a 1x the 
             pheremones
         '''
@@ -999,7 +945,7 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant.location, self.world.hiveLocation)
         possible_moves = self.world.findNeighbours(self.ant.location) 
         
-        self.ant.move()
+        self.ant.turn()
         
         self.assertEqual(self.ant.location in possible_moves, True)
         self.assertEqual(self.ant.lastPoint, self.world.hiveLocation)
@@ -1007,7 +953,7 @@ class TestAnt(unittest.TestCase):
         test_point = self.ant.location
         possible_moves = self.world.findNeighbours(self.ant.location) 
        
-        self.ant.move()
+        self.ant.turn()
         
         self.assertEqual(self.ant.location in possible_moves, True)
         self.assertEqual(self.ant.lastPoint, test_point)
