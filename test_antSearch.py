@@ -706,6 +706,22 @@ class TestAnt(unittest.TestCase):
         
         self.assertEqual(self.ant.nextPoint in possible_moves, True)
 
+    def test_pre_turn_pheremones(self):
+        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
+            choosing a point with pheremones over empty adjacent points.
+        '''
+        
+        self.ant.location = (50,50)
+        self.world.addPheremone((49,50))
+        expected_weights = [(49,50),(49,50), (49,49),(50,49),(51,49),(51,50),
+                   (49,51),(50,51),(51,51)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
+    
+    
     def test_pre_turn_priorties_hive_food(self):
         ''' Tests, in an ants pre-turn step, that when an ant has food, it 
             correctly prioritises choosing a hive over empty adjacent points
@@ -739,12 +755,6 @@ class TestAnt(unittest.TestCase):
         self.assertTrue(False)
 
                 
-    def test_pre_turn_pheremones(self):
-        ''' Tests, in an ants pre-turn step, that it has correctly prioritised 
-            choosing a point with pheremones over empty adjacent points.
-        '''
-                        
-        self.assertTrue(False)
      
      
     def test_emptyWeights(self):

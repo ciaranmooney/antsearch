@@ -49,6 +49,7 @@ class simulation(object):
             print("Total food", self.world.totalFood)
             print("World finished?", self.world.finished)
             print("=====xxxx========")
+        print("====Simulation Finished====")
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
@@ -136,49 +137,70 @@ class ant(object):
             
             HaveFood = False
                 empty point = *1
-                point with x pheremones = *x
+                point with x pheremones = *(x+1)
                 point with food = *(empty+pheremones)
             
             HaveFood = True
                 empty point = *1
-                point with x pheremones = *x
-                point with have = *(empty+pheremones)
+                point with x pheremones = *(x+1)
+                point with hive = *(empty+pheremones)
         '''
         
         neighbours = self.world.findNeighbours(self.location)
         weights = []
         print(neighbours)
-        for each in neighbours:
-            print(type(self.world.point(each)))
-            if self.world.point(each) == None:
-                weights.append(each)
+        if self.haveFood == False:
+            food_near = False
+            while neighbours:
+                coord = neighbours.pop()
+                p = self.world.point(coord)
+                
+                if isinstance(p, food):
+                    food_near = True
+                    food_point = coord
 
-            if isinstance(self.world.point(each), point):
-                pher = self.world.point(each).totalPheremones()
-                for i in range(pher):
-                    weights.append(each)
+                if p == None:
+                    weights.append(coord)
 
-            if isinstance(self.world.point(each), hive) and self.haveFood == True:
-                # The range(len(weights)) method only works if this is run last
-                for i in range(100):
-                    weights.append(each)
+                if isinstance(p, point):
+                    pher = p.totalPheremones()
+                    if pher > 0:
+                        for i in range(pher+1):
+                            weights.append(coord)
+            if food_near:
+                for i in range(len(weights)):
+                    weights.append(food_point)
 
-            if isinstance(self.world.point(each), food) and self.haveFood == False:
-                print("FOOD NEXT DOOR")
-                for i in range(len(weights)*2):
-                    weights.append(each)
+        if self.haveFood == True:
+            hive_near = False
+            while neighbours:
+                coord = neighbours.pop()
+                p = self.world.point(coord)
 
-        print("weights")
-        print(weights)
-        self.nextPoint = choice(weights)
+                if isinstance(p, hive):
+                    hive_near = True
+                    hive_point = coord
+
+                if p == None:
+                    weights.append(coord)
+
+                if isinstance(p, point):
+                    pher = p.totalPheremones()
+                    if pher > 0:
+                        for i in range(pher+1):
+                            weights.append(coord)
+            if hive_near:
+                for i in range(len(weights)):
+                    weights.append(hive_point)
+
+        self.weights = weights
+        self.nextPoint = choice(self.weights)
     
     def weighting(self, neighbours, criteria):
         ''' Takes the neighbours list and returns a weighted list based on 
             criteria and the weightFunc
         '''
-        
-        # if criteria choose function
-        
+        pass 
         
     def emptyWeights(self):
         '''
