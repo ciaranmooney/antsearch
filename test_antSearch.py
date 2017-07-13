@@ -670,13 +670,14 @@ class TestAnt(unittest.TestCase):
         ''' Creates a world for use in tests with a hive and food in the same 
             location for all the tests.
             
-            Creates an ant within this world for thet tests.
+            Creates an ant within this world for the tests.
         '''
         
         hiveLocation = (10,10)
         foodLocation = (99,2)
         self.world = antSearch.world(100, hive=hiveLocation, food=foodLocation)
         self.ant = antSearch.ant(self.world) 
+
 
     def test_init(self):
         ''' Tests that the ant is created correctly.
@@ -727,25 +728,49 @@ class TestAnt(unittest.TestCase):
             correctly prioritises choosing a hive over empty adjacent points
         '''
         
-        self.assertTrue(False)
-        
+        self.ant.location = (9,9)
+        self.ant.haveFood = True 
+        expected_weights = [(8,8),(9,8),(10,8),(8,9),(10,9),(8,10),
+                   (9,10),(10,10),(10,10),(10,10),(10,10),(10,10),
+                   (10,10),(10,10)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
+    
+
     def test_pre_turn_priorties_hive_no_food(self):
         ''' Tests, in an ants pre-turn step, that when an ant does not have food
             it does not prioritise a hive.
         '''
         
-        self.assertTrue(False)
-        
-        
+        self.ant.location = (9,9)
+        expected_weights = [(8,8),(9,8),(10,8),(8,9),(10,9),(8,10),
+                   (9,10),(10,10)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
+       
+
     def test_pre_turn_priorties_food_no_food(self):
         ''' Tests, in an ants pre-turn step, that when an ant has no food that 
             it has correctly prioritises choosing a food point over empty 
             adjacent points.
         '''
         
-        self.assertTrue(False)
+        self.ant.location = (99,1)
+        expected_weights = [(98,0),(99,0),(98,1),(98,2),(99,2),(99,2),(99,2),
+                            (99,2)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
         
-        
+    
     def test_pre_turn_priorties_food_food(self):
         ''' Tests, in an ants pre-turn step, that when an ant has food that it 
             has not prioritised choosing a food point over empty adjacent 

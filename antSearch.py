@@ -159,6 +159,9 @@ class ant(object):
                     food_near = True
                     food_point = coord
 
+                if isinstance(p, hive):
+                    weights.append(coord)
+
                 if p == None:
                     weights.append(coord)
 
