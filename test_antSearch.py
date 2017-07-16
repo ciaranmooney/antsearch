@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import unittest
@@ -777,7 +777,14 @@ class TestAnt(unittest.TestCase):
             points.
         '''
         
-        self.assertTrue(False)
+        self.ant.location = (99,1)
+        self.ant.haveFood = True
+        expected_weights = [(98,0),(99,0),(98,1),(98,2),(99,2)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
 
     def test_pre_turn_priorities_multiple_food(self):
         ''' Tests that when an ant has food and is adjacent to a hive,
@@ -787,8 +794,19 @@ class TestAnt(unittest.TestCase):
             priority hive, pheremones, then empty
         '''
         
-        self.assertTrue(False)
-        
+        self.ant.location = (10,9)
+        self.ant.haveFood = True
+        self.world.addPheremone((9,8))
+        self.world.addPheremone((9,8))
+        expected_weights = [(9,8),(9,8),(9,8),(10,8),(11,8),(9,9),(11,9),
+                            (9,10),(11,10),(10,10),(10,10),(10,10),(10,10),
+                            (10,10),(10,10),(10,10),(10,10),(10,10)]
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
+
                 
     def test_pre_turn_priorities_multiple_no_food(self):
         ''' Tests that when an ant has no food and is adjacent to a food,
@@ -798,7 +816,17 @@ class TestAnt(unittest.TestCase):
             priority food, pheremones, then empty
         '''
         
-        self.assertTrue(False)
+        self.ant.location = (98,2)
+        self.world.addPheremone((98,1))
+        self.world.addPheremone((98,1))
+        expected_weights = [(97,1),(98,1),(98,1),(99,1),(98,1),(97,2),(97,3),
+                            (98,3),(99,3),(99,2),(99,2),(99,2),(99,2),(99,2),
+                            (99,2),(99,2),(99,2),(99,2)]   
+        expected_weights.sort()
+        self.ant.turn()
+        ant_weights = self.ant.weights
+        ant_weights.sort()
+        self.assertEqual(ant_weights, expected_weights)
     
     
     def test_turn_with_food(self):

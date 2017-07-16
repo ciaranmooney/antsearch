@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import random
@@ -183,6 +183,9 @@ class ant(object):
                 if isinstance(p, hive):
                     hive_near = True
                     hive_point = coord
+
+                if isinstance(p, food):
+                    weights.append(coord)
 
                 if p == None:
                     weights.append(coord)
