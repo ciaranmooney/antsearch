@@ -845,20 +845,36 @@ class TestAnt(unittest.TestCase):
             point when it turns.
         '''
         
-        self.assertTrue(False)
+        self.assertFalse(self.ant.haveFood)
+        original_location = (50,50)
+
+        self.ant.turn()
+        
+        self.assertEqual(self.world.point(original_location), None)
         
     
-    def test_turn_with_food_hive(self):
+    def test_turn_with_food_on_hive(self):
         ''' This test checks that when an ant turns with food on a hive point 
             that it deposits the food at the hive.
+
+            Also checks the totals are correct.
+            
         '''
-         
-        self.assertTrue(False)
+
+        self.world.food().removeFood()
+        self.ant.haveFood = True
+        self.assertEqual(self.world.hive().food, 0)
         
+        self.ant.turn()
+
+        self.assertEqual(self.world.hive().food, 1)
+        self.assertEqual(self.world.food().foodLeft, 99)
+        self.assertEqual(self.world.hive().food + self.world.food().foodLeft, 100)
+ 
     def test_chooseMove(self):
         ''' Tests the choose move function a move from the set generated.
         '''
-        
+         
         self.assertTrue(False)
         
     def test_turn_without_food_on_food(self):    
