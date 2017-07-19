@@ -62,7 +62,6 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        print(self.world.pheremones)
         self.assertTrue(False)
         
     def test_simulation_1x3(self):
@@ -108,7 +107,6 @@ class Simulation(unittest.TestCase):
         self.assertEqual(self.world.hive().food, 1)
         self.assertEqual(self.world.food().foodLeft, 0)
 
-        print(self.world.pheremones)
         self.assertTrue(len(self.world.pheremones) > 0)
         
 
@@ -637,7 +635,6 @@ class TestWorld(unittest.TestCase):
         self.World3.pheremoneDecay()
         
         self.assertEqual(self.World3.point((1,1)).totalPheremones(), 0)
-        print(self.World3.pheremones)
         self.assertTrue((1,1) not in self.World3.pheremones)
         
         
@@ -855,7 +852,7 @@ class TestAnt(unittest.TestCase):
         ''' This test checks that when an ant turns with food on a hive point 
             that it deposits the food at the hive.
         '''
-        
+         
         self.assertTrue(False)
         
     def test_chooseMove(self):
@@ -894,7 +891,6 @@ class TestAnt(unittest.TestCase):
         ''' Checks that an ant moves to the point that was chosen in pre_turn.
         '''
         
-        print(self.ant.location) 
         self.assertEqual(self.ant.location, (10,10)) # match setup.
         self.ant.preTurn()
         nextLocation = self.ant.nextPoint
