@@ -614,14 +614,45 @@ class TestWorld(unittest.TestCase):
                step 5, pheremone 0
         '''
         
-        self.assertTrue(False)
+        p = (1,1)
+        self.World3.pheremoneDecayRate = 3
+
+        self.assertEqual(self.World3.point(p), None)
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p), None)
+        
+        self.World3.addPheremone(p)
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+        
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+       
+        self.World3.addPheremone(p)
+        self.assertEqual(self.World3.point(p).totalPheremones(), 2)
+        
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+        
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p).totalPheremones(), 0)
             
     def test_pheremonDecay_zero(self):
         ''' Checks that if pheremone decay rate is set to zero that 
             the world doesn't fall over.            
         '''
         
-        self.assertTrue(False)
+        p = (1,1)
+        self.World3.pheremoneDecayRate = 0
+
+        self.assertEqual(self.World3.point(p), None)
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p), None)
+        
+        self.World3.addPheremone(p)
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
+        
+        self.World3.turn() 
+        self.assertEqual(self.World3.point(p).totalPheremones(), 1)
 
     def test_pheremone_list(self):
         ''' Test that when pheremone reaches 0 that it is removed from
