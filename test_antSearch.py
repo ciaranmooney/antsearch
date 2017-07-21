@@ -871,12 +871,6 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.world.food().foodLeft, 99)
         self.assertEqual(self.world.hive().food + self.world.food().foodLeft, 100)
  
-    def test_chooseMove(self):
-        ''' Tests the choose move function a move from the set generated.
-        '''
-         
-        self.assertTrue(False)
-        
     def test_turn_without_food_on_food(self):    
         ''' Tests that an ant without food on a food point picks up some food.
         '''
@@ -899,8 +893,14 @@ class TestAnt(unittest.TestCase):
     def test_turn_with_food_on_food(self):    
         ''' Test that an ant with food on a food point does not pick up food.
         '''
-        
-        self.assertTrue(False)
+       
+        self.ant.location = self.world.foodLocation
+        self.ant.haveFood = True
+        self.assertEqual(self.world.food().foodLeft, 100)
+
+        self.ant.turn()
+
+        self.assertEqual(self.world.food().foodLeft, 100)
         
 
     def test_post_turn(self):
