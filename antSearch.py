@@ -28,28 +28,14 @@ class simulation(object):
         '''
         self.ants = ants
         self.world = world
-        print(self.ants)
 
     def run(self):
         '''
         '''
-        print("Running")
         while not self.world.finished:
-            print("=============")
-            print("Turning ants")   
             for ant in self.ants:
-                print("Ant turn", ant)
                 ant.turn()
-                print("Found food?", ant.haveFood)
-            print("=============")
-            print("World, turn")
             self.world.turn()
-            print("Hive food.", self.world.hive().food)
-            print("Food", self.world.food().foodLeft)
-            print("Total food", self.world.totalFood)
-            print("World finished?", self.world.finished)
-            print("=====xxxx========")
-        print("====Simulation Finished====")
 
 class ant(object):
     ''' Ants looks for food, when they find it they return home follwing a
@@ -97,13 +83,9 @@ class ant(object):
             if ant has food but not on food point then deposit pheremone 
             move (priority hive, pheremones, then empty)
         '''
-        print("ant turning") 
-        print("Current location: "+str(self.location))
-        print("Ant Food: "+ str(self.haveFood))
         self.preTurn()
 
         if self.haveFood == False and isinstance(self.world.point(self.location), food):
-            print("Got food!")
             self.world.food().removeFood()
             self.haveFood = True
 
@@ -112,16 +94,13 @@ class ant(object):
             self.haveFood = False
 
         if self.haveFood == False and isinstance(self.world.point(self.location), hive):
-            print("Still in hive")
+            pass # Still in hive?
 
         if self.haveFood == True and not isinstance(self.world.point(self.location), food):
-            print("Ant adding pheremones")
             print(self.location)
             self.world.addPheremone(self.location)
 
         self.postTurn()
-        print("Next point: " + str(self.nextPoint))
-        print("ant finish turning")
 
     def postTurn(self):
         '''
@@ -456,9 +435,7 @@ class point(object):
         ''' Sets a value of self.pheremones to zero to indicate decay of the
             pheremone trail.
         '''
-        print("Step:", step, "Pheremones", self.pheremones)
         self.pheremones[(step-1) % len(self.pheremones)] = 0
-        print("Step:", step, "Pheremones", self.pheremones)
 
         
     def pheremoneAdd(self, step):
