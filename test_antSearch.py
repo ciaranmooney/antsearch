@@ -916,10 +916,6 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant.haveFood, True)
         self.assertEqual(self.world.food().foodLeft,self.world.totalFood - 1)
 
-        new_location = self.ant.location
-
-        self.assertTrue(False)
-        
         
     def test_turn_with_food_on_food(self):    
         ''' Test that an ant with food on a food point does not pick up food.
