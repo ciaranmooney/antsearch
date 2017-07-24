@@ -217,8 +217,10 @@ class TestPoint(unittest.TestCase):
         self.p.pheremoneAdd(1)  # step 1
         self.assertEqual(self.p.totalPheremones(), 1)
         self.p.pheremoneDecay(1)
+        self.assertEqual(self.p.totalPheremones(), 1)
+        self.p.pheremoneDecay(2)
         self.assertEqual(self.p.totalPheremones(), 0)
-        self.p.pheremoneDecay(1)
+        self.p.pheremoneDecay(3)
         self.assertEqual(self.p.totalPheremones(), 0)
         self.assertNotEqual(self.p.totalPheremones(), -1)
         
