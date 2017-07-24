@@ -490,9 +490,9 @@ class TestWorld(unittest.TestCase):
         
         self.assertEqual(self.World3.pheremones, [point])
 
-    def test_addPheremone_empty_point_zero_deay(self):
+    def test_addPheremone_empty_point_zero_decay(self):
         ''' Tests that adding pheremones to a point with decay rate set to
-            zero work.
+            zero works.
         '''
         point = (49,49)
         self.World3.pheremoneDecayRate=0
@@ -501,10 +501,9 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(self.World3.point(point).totalPheremones(), 1)
         self.World3.addPheremone(point)
         self.assertEqual(self.World3.point(point).totalPheremones(), 2)
-        
-        self.assertEqual(self.World3.pheremones, [point])
-        
-        self.assertTrue(False)
+       
+        self.World3.pheremoneDecay()
+        self.assertEqual(self.World3.point(point).totalPheremones(), 2)
     
     def test_addPheremone_hive_point(self):
         '''
