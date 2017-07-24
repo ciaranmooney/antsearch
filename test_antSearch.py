@@ -659,7 +659,8 @@ class TestWorld(unittest.TestCase):
         ''' Test that when pheremone reaches 0 that it is removed from
             the pheremone list.
         '''
-        
+       
+        self.World3.pheremoneDecayRate = 1 
         self.World3.addPheremone((1,1))
 
         self.assertEqual(self.World3.point((1,1)).totalPheremones(), 1)
