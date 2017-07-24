@@ -97,7 +97,6 @@ class ant(object):
             pass # Still in hive?
 
         if self.haveFood == True and not isinstance(self.world.point(self.location), food):
-            print(self.location)
             self.world.addPheremone(self.location)
 
         self.postTurn()
@@ -127,7 +126,6 @@ class ant(object):
         
         neighbours = self.world.findNeighbours(self.location)
         weights = []
-        print(neighbours)
         if self.haveFood == False:
             food_near = False
             while neighbours:
@@ -351,7 +349,6 @@ class world(object):
 
         x, y = coords
         if self.point(coords) == None:
-            print(self.pheremoneDecayRate)
             self.world[x][y] = point(self.pheremoneDecayRate)
             self.world[x][y].pheremoneAdd(self.steps)
             if coords not in self.pheremones:
