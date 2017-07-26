@@ -250,6 +250,42 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(self.p.totalPheremones(), 0)
         
 
+    def test_pheremoneDecay_first_decay(self):
+        ''' Tests that after pheremones added to a point they do not decay
+            until the loop comes around.
+
+            Example
+            ---
+
+            Step 1   : [1,0,0,0,0,0,0,0,0,0]
+            Step 2   : [1,0,0,0,0,0,0,0,0,0]
+            Step ... : ...
+            Step 9   : [1,0,0,0,0,0,0,0,0,0] 
+            Step 10  : [1,0,0,0,0,0,0,0,0,0]
+            Step 11  : [0,0,0,0,0,0,0,0,0,0]
+
+
+            XXX This test must be finished before world.test_removePheremone
+            is finished.
+        
+            Nb. Fragile test dependant on self.decay being equal to 10.
+        '''
+        self.assertTrue(False)
+        self.assertEqual(self.p.totalPheremones(), 0)
+        self.p.pheremoneAdd(0)  # step 1
+        self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
+        self.p.pheremoneAdd(0)  # step 1
+        self.assertEqual(self.p.pheremones, [2,0,0,0,0,0,0,0,0,0])
+        self.p.pheremoneAdd(1)  # step 2
+        self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
+        self.p.pheremoneDecay(10) # step 10
+        self.assertEqual(self.p.pheremones, [2,1,0,0,0,0,0,0,0,0])
+        self.p.pheremoneDecay(11) # step 11
+        self.assertEqual(self.p.pheremones, [0,1,0,0,0,0,0,0,0,0])
+        self.p.pheremoneDecay(12) # step 12
+        self.assertEqual(self.p.pheremones, [0,0,0,0,0,0,0,0,0,0])
+
+
 class TestFood(unittest.TestCase):
     ''' Tests for food class.
     '''
@@ -530,7 +566,17 @@ class TestWorld(unittest.TestCase):
         point = (50,50)
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
+        print(self.World3.pheremoneDecayRate)
         self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        print(self.World3.point(point).pheremones)
+        self.World3.steps = 1
+        self.World3.removePheremone(point)
+        print(self.World3.point(point).pheremones)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 9
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 10 
         self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).totalPheremones(), 0)
 
