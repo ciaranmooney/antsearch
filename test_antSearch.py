@@ -270,7 +270,8 @@ class TestPoint(unittest.TestCase):
         
             Nb. Fragile test dependant on self.decay being equal to 10.
         '''
-        self.assertTrue(False)
+        
+        #self.assertTrue(False)
         self.assertEqual(self.p.totalPheremones(), 0)
         self.p.pheremoneAdd(0)  # step 1
         self.assertEqual(self.p.pheremones, [1,0,0,0,0,0,0,0,0,0])
@@ -566,19 +567,64 @@ class TestWorld(unittest.TestCase):
         point = (50,50)
         self.assertEqual(self.World3.point(point), None)
         self.World3.addPheremone(point)
-        print(self.World3.pheremoneDecayRate)
         self.assertEqual(self.World3.point(point).totalPheremones(), 1)
-        print(self.World3.point(point).pheremones)
-        self.World3.steps = 1
+        print(self.World3.steps)
         self.World3.removePheremone(point)
-        print(self.World3.point(point).pheremones)
+         
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 1 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 2 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 3 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 4 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 5 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 6 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 7 
+        self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 8 
+        self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).totalPheremones(), 1)
         self.World3.steps = 9
         self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).totalPheremones(), 1)
         self.World3.steps = 10 
         self.World3.removePheremone(point)
+        self.assertEqual(self.World3.point(point).totalPheremones(), 1)
+        self.World3.steps = 11 
+        self.World3.removePheremone(point)
         self.assertEqual(self.World3.point(point).totalPheremones(), 0)
+
+    def test_turn_world_finished(self):
+        '''
+        '''
+        self.assertFalse(self.World3.finished) 
+        self.World3.turn()
+        self.assertFalse(self.World3.finished) 
+
+        self.World3.hive().food = self.World3.food().foodLeft
+        self.World3.food().foodLeft = 0
+
+        self.assertFalse(self.World3.finished) 
+        self.World3.turn()
+        self.assertTrue(self.World3.finished)
+
+    def test_print_world(self):
+        ''' World will have spaces where there are Nones,
+        '''
+        self.assertTrue(False)
+
 
     def test_turn_world_finished(self):
         '''
