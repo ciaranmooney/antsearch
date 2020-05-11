@@ -6,8 +6,14 @@ class world(object):
     ''' World contains the hive, the pheremones, and the food.
     '''
 
-    def __init__(self):
-        pass
+    def __init__(self, dimensions=None):
+        if dimensions == None:
+            pass
+        else:
+            self.world = dimensions
+            self.x, self.y = dimensions
+            self.size = dimensions[0] * dimensions[1]
+
 
     def hive(self):
         ''' Convinience method to quickly get the hive object.
